@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background"
+    tools:context=".MainActivity">
+
+
+    <TextView
+        android:id="@+id/createNewAccView"
+        android:layout_width="0dp"
+        android:layout_height="37dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="250dp"
+        android:text="@string/newaccountcreateview"
+        android:textColor="#FF178E7E"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/remCredChk"
+        app:layout_constraintStart_toStartOf="@+id/remCredChk"
+        app:layout_constraintTop_toBottomOf="@+id/remCredChk" />
+
+    <EditText
+        android:id="@+id/usernameView"
+        android:layout_width="294dp"
+        android:layout_height="34dp"
+        android:layout_marginStart="55dp"
+        android:layout_marginTop="230dp"
+        android:background="@android:color/darker_gray"
+        android:ems="10"
+        android:hint="@string/username_hint"
+        android:inputType="textPersonName"
+        android:textColorHint="#FF178E7E"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:autofillHints="" />
+
+    <EditText
+        android:id="@+id/passowrdView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@android:color/darker_gray"
+        android:ems="10"
+        android:hint="@string/password_hint"
+        android:inputType="textPassword"
+        android:textColorHint="#FF178E7E"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="@+id/usernameView"
+        app:layout_constraintStart_toStartOf="@+id/usernameView"
+        app:layout_constraintTop_toBottomOf="@+id/usernameView" />
+
+    <Button
+        android:id="@+id/loginBtn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="@string/loginbutton"
+        android:textColor="#FF178E7E"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="@+id/passowrdView"
+        app:layout_constraintStart_toStartOf="@+id/passowrdView"
+        app:layout_constraintTop_toBottomOf="@+id/passowrdView" />
+
+    <CheckBox
+        android:id="@+id/remCredChk"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:checked="false"
+        android:onClick="saveLoginCredentials"
+        android:text="@string/credcheckbox"
+        android:textColor="#FF178E7E"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="@+id/loginBtn"
+        app:layout_constraintStart_toStartOf="@+id/loginBtn"
+        app:layout_constraintTop_toBottomOf="@+id/loginBtn" />
+
+</android.support.constraint.ConstraintLayout>

@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Rewards</string>
+<string name="username_hint">Username</string>
+<string name="password_hint">Password</string>
+<string name="loginbutton">LOGIN</string>
+<string name="credcheckbox">Remember my credentials</string>
+<string name="newaccountcreateview">Tap here to create new account</string>
+    <string name="prefFile">MY_PREF_FILE</string>
+    <string name="pref_user">U_PREF</string>
+    <string name="pref_pass">PASS_PREF</string>
+    <string name="pref_check">CHECK_PREF</string>
+</resources>
