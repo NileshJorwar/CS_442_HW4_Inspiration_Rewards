@@ -4,23 +4,45 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background"
+
     tools:context=".MainActivity">
 
 
-    <TextView
-        android:id="@+id/createNewAccView"
+    <ImageView
+        android:id="@+id/imgLogo"
+        android:layout_width="89dp"
+        android:layout_height="76dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="60dp"
+        android:scaleType="fitCenter"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/logo" />
+    <ImageView
+        android:id="@+id/imgTitle"
+        android:layout_width="257dp"
+        android:layout_height="124dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="38dp"
+        android:scaleType="fitCenter"
+        app:layout_constraintStart_toEndOf="@+id/imgLogo"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/name_image" />
+
+    <ImageView
+        android:id="@+id/imgBckg"
         android:layout_width="0dp"
-        android:layout_height="37dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginBottom="250dp"
-        android:text="@string/newaccountcreateview"
-        android:textColor="#FF178E7E"
-        android:textSize="18sp"
+        android:layout_height="540dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginBottom="6dp"
+        android:alpha="0.2"
+        android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/remCredChk"
-        app:layout_constraintStart_toStartOf="@+id/remCredChk"
-        app:layout_constraintTop_toBottomOf="@+id/remCredChk" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imgTitle"
+        app:srcCompat="@drawable/login_people" />
+
 
     <EditText
         android:id="@+id/usernameView"
@@ -28,22 +50,22 @@
         android:layout_height="34dp"
         android:layout_marginStart="55dp"
         android:layout_marginTop="230dp"
-        android:background="@android:color/darker_gray"
+        android:autofillHints=""
+        android:background="#D6D7D7"
         android:ems="10"
         android:hint="@string/username_hint"
         android:inputType="textPersonName"
         android:textColorHint="#FF178E7E"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:autofillHints="" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/passowrdView"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="34dp"
         android:layout_marginTop="16dp"
-        android:background="@android:color/darker_gray"
+        android:background="#D6D7D7"
         android:ems="10"
         android:hint="@string/password_hint"
         android:inputType="textPassword"
@@ -58,8 +80,10 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
+        android:onClick="onLoginBtnClick"
         android:text="@string/loginbutton"
         android:textColor="#FF178E7E"
+        android:background="@android:color/darker_gray"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="@+id/passowrdView"
         app:layout_constraintStart_toStartOf="@+id/passowrdView"
@@ -79,4 +103,18 @@
         app:layout_constraintStart_toStartOf="@+id/loginBtn"
         app:layout_constraintTop_toBottomOf="@+id/loginBtn" />
 
+    <TextView
+        android:id="@+id/createNewAccView"
+        android:layout_width="0dp"
+        android:layout_height="37dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="250dp"
+        android:onClick="onNewAccCreateClick"
+        android:text="@string/newaccountcreateview"
+        android:textColor="#FF178E7E"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/remCredChk"
+        app:layout_constraintStart_toStartOf="@+id/remCredChk"
+        app:layout_constraintTop_toBottomOf="@+id/remCredChk" />
 </android.support.constraint.ConstraintLayout>
