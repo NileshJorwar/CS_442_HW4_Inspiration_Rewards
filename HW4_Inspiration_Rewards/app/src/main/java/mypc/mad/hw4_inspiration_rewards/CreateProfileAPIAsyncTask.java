@@ -16,31 +16,52 @@ import java.net.URL;
 
 import static java.net.HttpURLConnection.HTTP_OK;
 
-public class LoginAPIAyncTask extends AsyncTask<String, Void, String> {
+public class CreateProfileAPIAsyncTask extends AsyncTask<Void, Void, String> {
 
-    private static final String TAG = "LoginAPIAyncTask";
+    private static final String TAG = "CreateProfileAPIAsyncTask";
     private static final String baseUrl = "http://inspirationrewardsapi-env.6mmagpm2pv.us-east-2.elasticbeanstalk.com";
-    private static final String loginEndPoint = "/login";
-
+    private static final String loginEndPoint = "/profiles";
+    private CreateProfileBean bean;
     @SuppressLint("StaticFieldLeak")
-    private MainActivity mainActivity;
+    private CreateActivity createActivity;
 
-    public LoginAPIAyncTask(MainActivity mainActivity) {
+    public CreateProfileAPIAsyncTask(CreateActivity createActivity,CreateProfileBean bean) {
 
-        this.mainActivity = mainActivity;
+        this.createActivity = createActivity;
+        this.bean=bean;
     }
 
     @Override
-    protected String doInBackground(String... strings) {
+    protected String doInBackground(Void... voids) {
         JSONObject jsonObject = new JSONObject();
-        String stuId = strings[0];
-        String uName = strings[1];
-        String pswd = strings[2];
-        Log.d(TAG, "doInBackground: "+stuId+uName+pswd);
+        String studentId=bean.studentId;
+        String username=bean.username;
+        String password=bean.password;
+        String firstName=bean.firstName;
+        String lastName=bean.lastName;
+        int pointsToAward=bean.pointsToAward;
+        String story=bean.story;
+        String department=bean.department;
+        String position=bean.position;
+        boolean admin=bean.admin;
+        String location=bean.location;
+        String imageBytes=bean.imageBytes;
+        String rewards=bean.rewards;
+        Log.d(TAG, "doInBackground: CreateProfile"+studentId+ username+ password+ firstName+ lastName+ pointsToAward+ department+ story+ position+ admin+ location+ imageBytes+ rewards);
         try {
-            jsonObject.put("studentId", stuId);
-            jsonObject.put("username", uName);
-            jsonObject.put("password", pswd);
+            jsonObject.put("studentId", studentId);
+            jsonObject.put("username", username);
+            jsonObject.put("password", password);
+            jsonObject.put("firstName", firstName);
+            jsonObject.put("lastName", lastName);
+            jsonObject.put("pointsToAward", pointsToAward);
+            jsonObject.put("department", department);
+            jsonObject.put("story", story);
+            jsonObject.put("position", position);
+            jsonObject.put("admin", admin);
+            jsonObject.put("location", location);
+            jsonObject.put("imageBytes", imageBytes);
+            jsonObject.put("rewardRecords", rewards);
 
             return doAPICall(jsonObject);
 
@@ -77,7 +98,7 @@ public class LoginAPIAyncTask extends AsyncTask<String, Void, String> {
             int responseCode = connection.getResponseCode();
 
             StringBuilder result = new StringBuilder();
-            Log.d(TAG, "doAPICall: "+responseCode);
+            Log.d(TAG, "doAPICall: CreateProfile"+responseCode);
             // If successful (HTTP_OK)
             if (responseCode == HTTP_OK) {
 
@@ -124,14 +145,13 @@ public class LoginAPIAyncTask extends AsyncTask<String, Void, String> {
 
     @Override
     protected void onPostExecute(String connectionResult) {
-
         // Normally we would parse the results and make use of the data
         // For this example, we just use the returned string size - empty is fail
-        Log.d(TAG, "onPostExecute: "+connectionResult);
+        Log.d(TAG, "onPostExecute: CreateProfile"+connectionResult);
         if (connectionResult.contains("error")) // If there is "error" in the results...
-            mainActivity.getLoginAPIResp("FAILED");
+            createActivity.getCreateProfileAPIResp("FAILED");
         else
-            mainActivity.getLoginAPIResp(connectionResult);
+            createActivity.getCreateProfileAPIResp(connectionResult);
     }
 
 }

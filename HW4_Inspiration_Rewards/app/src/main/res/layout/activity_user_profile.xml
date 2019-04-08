@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".UserProfileActivity">
+
+    <TextView
+        android:id="@+id/userProfileName"
+        android:layout_width="wrap_content"
+        android:layout_height="34dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:text="TextView"
+        android:textAlignment="center"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/userProfileUname"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:text="TextView"
+        android:textAlignment="viewStart"
+        android:textSize="18sp"
+        android:textStyle="italic"
+        app:layout_constraintBaseline_toBaselineOf="@+id/userProfileName"
+        app:layout_constraintStart_toEndOf="@+id/userProfileName" />
+
+    <TextView
+        android:id="@+id/userProfileLocation"
+        android:layout_width="wrap_content"
+        android:layout_height="31dp"
+        android:layout_marginTop="8dp"
+        android:textSize="18sp"
+        android:textStyle="italic"
+        app:layout_constraintStart_toStartOf="@+id/userProfileName"
+        app:layout_constraintTop_toBottomOf="@+id/userProfileName" />
+
+    <ImageView
+        android:id="@+id/userProfileImage"
+        android:layout_width="168dp"
+        android:layout_height="210dp"
+        android:layout_marginTop="8dp"
+        android:scaleType="fitXY"
+        app:layout_constraintStart_toStartOf="@+id/userProfileLocation"
+        app:layout_constraintTop_toBottomOf="@+id/userProfileLocation"
+        app:srcCompat="@drawable/default_photo" />
+
+    <TextView
+        android:id="@+id/userProfilePtAwardedView"
+        android:layout_width="162dp"
+        android:layout_height="21dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/userProfilePtAw_view"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/userProfileImage"
+        app:layout_constraintTop_toBottomOf="@+id/userProfileLocation" />
+
+    <TextView
+        android:id="@+id/userProfileDeptView"
+        android:layout_width="162dp"
+        android:layout_height="28dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/userProfileDept_view"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="@+id/userProfilePtAwarded"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/userProfilePtAwarded"
+        app:layout_constraintTop_toBottomOf="@+id/userProfilePtAwarded" />
+
+    <TextView
+        android:id="@+id/userProfilePosView"
+        android:layout_width="158dp"
+        android:layout_height="28dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/userProfilePosition_view"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="@+id/userProfileDept"
+        app:layout_constraintStart_toStartOf="@+id/userProfileDept"
+        app:layout_constraintTop_toBottomOf="@+id/userProfileDept" />
+
+    <TextView
+        android:id="@+id/userProfilePtAvailView"
+        android:layout_width="0dp"
+        android:layout_height="26dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/userProfilePtAva_view"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="@+id/userProfilePos"
+        app:layout_constraintStart_toStartOf="@+id/userProfilePos"
+        app:layout_constraintTop_toBottomOf="@+id/userProfilePos" />
+
+    <TextView
+        android:id="@+id/userProfileUrStory"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Your Story:"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="@+id/userProfileImage"
+        app:layout_constraintStart_toStartOf="@+id/userProfileImage"
+        app:layout_constraintTop_toBottomOf="@+id/userProfileImage" />
+
+    <TextView
+        android:id="@+id/userProfileStoryText"
+        android:layout_width="0dp"
+        android:layout_height="190dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:textSize="18sp"
+        android:textStyle="italic"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/userProfileUrStory"
+        app:layout_constraintTop_toBottomOf="@+id/userProfileUrStory" />
+
+    <TextView
+        android:id="@+id/userProfileRewardHistory"
+        android:layout_width="147dp"
+        android:layout_height="42dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="104dp"
+        android:text="Reward History "
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/userProfileStoryText"
+        app:layout_constraintTop_toBottomOf="@+id/userProfileStoryText"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/userProfilePtAwarded"
+        android:layout_width="0dp"
+        android:layout_height="23dp"
+        android:layout_marginTop="5dp"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/userProfilePtAwardedView"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/userProfilePtAwardedView"
+        app:layout_constraintTop_toBottomOf="@+id/userProfilePtAwardedView" />
+
+    <TextView
+        android:id="@+id/userProfileDept"
+        android:layout_width="0dp"
+        android:layout_height="27dp"
+        android:layout_marginTop="5dp"
+        android:textSize="22sp"
+        app:layout_constraintEnd_toEndOf="@+id/userProfileDeptView"
+        app:layout_constraintStart_toStartOf="@+id/userProfileDeptView"
+        app:layout_constraintTop_toBottomOf="@+id/userProfileDeptView" />
+
+    <TextView
+        android:id="@+id/userProfilePos"
+        android:layout_width="0dp"
+        android:layout_height="29dp"
+        android:layout_marginTop="5dp"
+        android:textSize="22sp"
+        app:layout_constraintEnd_toEndOf="@+id/userProfilePosView"
+        app:layout_constraintStart_toStartOf="@+id/userProfilePosView"
+        app:layout_constraintTop_toBottomOf="@+id/userProfilePosView" />
+
+    <TextView
+        android:id="@+id/userProfilePtAvail"
+        android:layout_width="0dp"
+        android:layout_height="26dp"
+        android:layout_marginTop="5dp"
+        android:textSize="22sp"
+        app:layout_constraintEnd_toEndOf="@+id/userProfilePtAvailView"
+        app:layout_constraintStart_toStartOf="@+id/userProfilePtAvailView"
+        app:layout_constraintTop_toBottomOf="@+id/userProfilePtAvailView" />
+</android.support.constraint.ConstraintLayout>

@@ -3,6 +3,7 @@ package mypc.mad.hw4_inspiration_rewards;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
@@ -21,6 +22,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private static final String sId = "A20405042";
     private static final int B_REQUEST_CODE = 1;
+    private static final int UP_REQUEST_CODE = 2;
     public static final int REQUEST_ID_MULTIPLE_PERMISSIONS = 1;
     private RewardsPreferences preferences;
     private EditText unameView;
@@ -39,8 +45,10 @@ public class MainActivity extends AppCompatActivity {
     private LocationManager locationManager;
     private Location currentLocation;
     private Criteria criteria;
+    private JSONObject jsonObj;
     private static int MY_LOCATION_REQUEST_CODE = 329;
     private static int MY_EXT_STORAGE_REQUEST_CODE = 330;
+    MainActivity mainActivity = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,8 +78,7 @@ public class MainActivity extends AppCompatActivity {
         credChkBox.setChecked(preferences.getBoolValue(getString(R.string.pref_check)));
     }
 
-    public void setFileLocationPermissions()
-    {
+    public void setFileLocationPermissions() {
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         criteria = new Criteria();
         criteria.setPowerRequirement(Criteria.POWER_LOW);
@@ -81,20 +88,18 @@ public class MainActivity extends AppCompatActivity {
         criteria.setAltitudeRequired(false);
         criteria.setBearingRequired(false);
         criteria.setSpeedRequired(false);
-        int permLoc=ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
-        int permExt=ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        int permLoc = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
+        int permExt = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
         List<String> listPermissionsNeeded = new ArrayList<>();
-        if (permLoc!= PERMISSION_GRANTED)
-        {
+        if (permLoc != PERMISSION_GRANTED) {
             listPermissionsNeeded.add(Manifest.permission.ACCESS_FINE_LOCATION);
         }
 
-        if (permExt!= PERMISSION_GRANTED)
-        {
+        if (permExt != PERMISSION_GRANTED) {
             listPermissionsNeeded.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
         }
         if (!listPermissionsNeeded.isEmpty()) {
-            ActivityCompat.requestPermissions(this, listPermissionsNeeded.toArray(new String[listPermissionsNeeded.size()]),REQUEST_ID_MULTIPLE_PERMISSIONS );
+            ActivityCompat.requestPermissions(this, listPermissionsNeeded.toArray(new String[listPermissionsNeeded.size()]), REQUEST_ID_MULTIPLE_PERMISSIONS);
         }
 
     }
@@ -127,27 +132,38 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onLoginBtnClick(View v) {
-        if(isOnline())
-        {
-            String uName = unameView.getText().toString();
-            String pswd = passView.getText().toString();
-            new LoginAPIAyncTask(this).execute(sId, uName, pswd);
-        }
-        else
-            Toast.makeText(this, "No Internet Connection", Toast.LENGTH_SHORT).show();
+        String uName = unameView.getText().toString();
+        String pswd = passView.getText().toString();
+        new LoginAPIAsyncTask(mainActivity).execute(sId, uName, pswd);
+
     }
+
     public void onNewAccCreateClick(View v) {
         Log.d(TAG, "onNewAccCreateClick: Main");
-        if(isOnline())
-        {
-            Toast.makeText(this, "Internet Connection", Toast.LENGTH_SHORT).show();
+        if (isOnline()) {
+            makeCustomToast(this, "Internet Connection", Toast.LENGTH_SHORT);
             Intent intent = new Intent(this, CreateActivity.class);
             startActivityForResult(intent, B_REQUEST_CODE);
-        }
-        else
-            Toast.makeText(this, "No Internet Connection", Toast.LENGTH_SHORT).show();
+        } else
+            makeCustomToast(this, "No Internet Connection", Toast.LENGTH_SHORT);
     }
-    public void getLoginAPIResp(String resp) {
-        Log.d(TAG, "getLoginAPIResp: " + resp);
+
+    public static void makeCustomToast(Context context, String message, int time) {
+        Toast toast = Toast.makeText(context, "Image Size: " + message, time);
+        View toastView = toast.getView();
+        toastView.setBackgroundColor(context.getResources().getColor(R.color.colorPrimary));
+        TextView tv = toast.getView().findViewById(android.R.id.message);
+        tv.setPadding(100, 50, 100, 50);
+        tv.setTextColor(Color.WHITE);
+        toast.show();
+    }
+
+    public void getLoginAPIResp(CreateProfileBean respBean) {
+        Log.d(TAG, "getLoginAPIResp: " + respBean.getUsername()+ respBean.getFirstName()+ respBean.getLastName()+ respBean.getLocation()+  respBean.getDepartment()+ respBean.getPassword()+respBean.getPosition()+respBean.getStory()+respBean.getPointsToAward());
+        Intent intent = new Intent(this, UserProfileActivity.class);
+        intent.putExtra("USERPROFILE", respBean);
+        startActivity(intent);
+
+
     }
 }
