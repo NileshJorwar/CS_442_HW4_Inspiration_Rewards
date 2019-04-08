@@ -5,28 +5,32 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background"
-    tools:context=".CreateActivity">
-
+    tools:context=".EditActivity">
     <ImageView
-        android:id="@+id/createUserPhoto"
+        android:id="@+id/editUserPhoto"
         android:layout_width="152dp"
         android:layout_height="225dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="12dp"
-        android:onClick="captureImage"
         android:scaleType="fitXY"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/default_photo" />
 
     <EditText
-        android:id="@+id/createUname"
+        android:id="@+id/editUname"
         android:layout_width="224dp"
         android:layout_height="44dp"
         android:layout_marginTop="12dp"
         android:layout_marginEnd="8dp"
         android:background="#D7D7D6"
         android:ems="10"
+
+        android:clickable="false"
+        android:cursorVisible="false"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+
         android:hint="@string/createUsr_hint"
         android:inputType="textPersonName"
         android:textColorHint="#FF178E7E"
@@ -34,7 +38,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/createPass"
+        android:id="@+id/editPass"
         android:layout_width="0dp"
         android:layout_height="38dp"
         android:layout_marginTop="12dp"
@@ -43,22 +47,23 @@
         android:hint="@string/createPwd_hint"
         android:inputType="textPassword"
         android:background="#D7D7D6"
-        app:layout_constraintEnd_toEndOf="@+id/createUname"
-        app:layout_constraintStart_toStartOf="@+id/createUname"
-        app:layout_constraintTop_toBottomOf="@+id/createUname" />
+        app:layout_constraintEnd_toEndOf="@+id/editUname"
+        app:layout_constraintStart_toStartOf="@+id/editUname"
+        app:layout_constraintTop_toBottomOf="@+id/editUname" />
 
     <CheckBox
-        android:id="@+id/createChkBox"
+        android:id="@+id/editChkBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:textColor="#FF178E7E"
         android:text="@string/createAdmn_hint"
-        app:layout_constraintEnd_toEndOf="@+id/createPass"
-        app:layout_constraintStart_toStartOf="@+id/createPass"
-        app:layout_constraintTop_toBottomOf="@+id/createPass" />
+        android:textColor="#FF178E7E"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/editPass"
+        app:layout_constraintStart_toStartOf="@+id/editPass"
+        app:layout_constraintTop_toBottomOf="@+id/editPass" />
     <EditText
-        android:id="@+id/createFirstName"
+        android:id="@+id/editFirstName"
         android:layout_width="0dp"
         android:layout_height="38dp"
         android:layout_marginTop="8dp"
@@ -67,12 +72,12 @@
         android:hint="@string/createFistName_hint"
         android:inputType="textPersonName"
         android:textColorHint="#FF178E7E"
-        app:layout_constraintEnd_toEndOf="@+id/createPass"
-        app:layout_constraintStart_toStartOf="@+id/createPass"
-        app:layout_constraintTop_toBottomOf="@+id/createChkBox" />
+        app:layout_constraintEnd_toEndOf="@+id/editPass"
+        app:layout_constraintStart_toStartOf="@+id/editPass"
+        app:layout_constraintTop_toBottomOf="@+id/editChkBox" />
 
     <EditText
-        android:id="@+id/createLastName"
+        android:id="@+id/editLastName"
         android:layout_width="0dp"
         android:layout_height="35dp"
         android:layout_marginTop="10dp"
@@ -81,34 +86,34 @@
         android:hint="@string/createLastName_hint"
         android:inputType="textPersonName"
         android:textColorHint="#FF178E7E"
-        app:layout_constraintEnd_toEndOf="@+id/createFirstName"
-        app:layout_constraintStart_toStartOf="@+id/createFirstName"
-        app:layout_constraintTop_toBottomOf="@+id/createFirstName" />
+        app:layout_constraintEnd_toEndOf="@+id/editFirstName"
+        app:layout_constraintStart_toStartOf="@+id/editFirstName"
+        app:layout_constraintTop_toBottomOf="@+id/editFirstName" />
 
     <TextView
-        android:id="@+id/createDptView"
+        android:id="@+id/editDptView"
         android:layout_width="119dp"
         android:layout_height="28dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
         android:text="@string/createDept_lbl"
         android:textSize="18sp"
-        app:layout_constraintStart_toStartOf="@+id/createUserPhoto"
-        app:layout_constraintTop_toBottomOf="@+id/createUserPhoto" />
+        app:layout_constraintStart_toStartOf="@+id/editUserPhoto"
+        app:layout_constraintTop_toBottomOf="@+id/editUserPhoto" />
 
     <TextView
-        android:id="@+id/createPosView"
+        android:id="@+id/editPosView"
         android:layout_width="0dp"
         android:layout_height="30dp"
         android:layout_marginTop="16dp"
         android:text="@string/createPosition_lbl"
         android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="@+id/createDptView"
-        app:layout_constraintStart_toStartOf="@+id/createDptView"
-        app:layout_constraintTop_toBottomOf="@+id/createDptView" />
+        app:layout_constraintEnd_toEndOf="@+id/editDptView"
+        app:layout_constraintStart_toStartOf="@+id/editDptView"
+        app:layout_constraintTop_toBottomOf="@+id/editDptView" />
 
     <EditText
-        android:id="@+id/createDept"
+        android:id="@+id/editDept"
         android:layout_width="0dp"
         android:layout_height="35dp"
         android:layout_marginStart="8dp"
@@ -119,12 +124,12 @@
         android:inputType="textPersonName"
         android:textColorHint="#FF178E7E"
         android:background="#D7D7D6"
-        app:layout_constraintBaseline_toBaselineOf="@+id/createDptView"
+        app:layout_constraintBaseline_toBaselineOf="@+id/editDptView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/createDptView" />
+        app:layout_constraintStart_toEndOf="@+id/editDptView" />
 
     <EditText
-        android:id="@+id/createPos"
+        android:id="@+id/editPos"
         android:layout_width="0dp"
         android:layout_height="35dp"
         android:layout_marginTop="12dp"
@@ -133,30 +138,30 @@
         android:hint="@string/createPos_hint"
         android:inputType="textPersonName"
         android:textColorHint="#FF178E7E"
-        app:layout_constraintEnd_toEndOf="@+id/createDept"
+        app:layout_constraintEnd_toEndOf="@+id/editDept"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/createDept"
-        app:layout_constraintTop_toBottomOf="@+id/createDept" />
+        app:layout_constraintStart_toStartOf="@+id/editDept"
+        app:layout_constraintTop_toBottomOf="@+id/editDept" />
 
     <TextView
-        android:id="@+id/createStoryView"
+        android:id="@+id/editStoryView"
         android:layout_width="0dp"
         android:layout_height="30dp"
         android:layout_marginTop="12dp"
         android:text="@string/createStory_lbl"
         android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="@+id/createPosView"
-        app:layout_constraintStart_toStartOf="@+id/createPosView"
-        app:layout_constraintTop_toBottomOf="@+id/createPosView" />
+        app:layout_constraintEnd_toEndOf="@+id/editPosView"
+        app:layout_constraintStart_toStartOf="@+id/editPosView"
+        app:layout_constraintTop_toBottomOf="@+id/editPosView" />
 
     <EditText
-        android:id="@+id/createStory"
+        android:id="@+id/editStory"
         android:layout_width="0dp"
-        android:layout_height="286dp"
+        android:layout_height="0dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="130dp"
         android:background="#D7D7D6"
         android:ems="10"
         android:gravity="top"
@@ -167,16 +172,17 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/createStoryView" />
+        app:layout_constraintTop_toBottomOf="@+id/editStoryView"
+        app:layout_constraintVertical_bias="0.253" />
 
     <TextView
-        android:id="@+id/availChars"
+        android:id="@+id/editAvailChars"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
         android:textSize="18sp"
-        app:layout_constraintBaseline_toBaselineOf="@+id/createStoryView"
-        app:layout_constraintEnd_toEndOf="@+id/createPos"
-        app:layout_constraintStart_toStartOf="@+id/createPos"
-        app:layout_constraintTop_toBottomOf="@+id/createPos" />
+        app:layout_constraintBaseline_toBaselineOf="@+id/editStoryView"
+        app:layout_constraintEnd_toEndOf="@+id/editPos"
+        app:layout_constraintStart_toStartOf="@+id/editPos"
+        app:layout_constraintTop_toBottomOf="@+id/editPos" />
 </android.support.constraint.ConstraintLayout>

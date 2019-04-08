@@ -35,21 +35,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.location.Address;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
-import static mypc.mad.hw4_inspiration_rewards.MainActivity.makeCustomToast;
 
 public class CreateActivity extends AppCompatActivity {
     private static final String TAG = "CreateActivity";
@@ -78,7 +72,20 @@ public class CreateActivity extends AppCompatActivity {
     private String imgString = "";
     private double latitude;
     private double longitude;
-    private String locationFromLatLong;
+
+    //To Send over API
+    private String locationFromLatLong="";
+    private String studentId = "A20405042";
+    private String username = "";
+    private String password = "";
+    private String firstName = "";
+    private String lastName = "";
+    private int pointsToAward =1000;
+    private String department = "";
+    private String story = "";
+    private String position = "";
+    private boolean admin = false;
+    private String rewards = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,9 +105,7 @@ public class CreateActivity extends AppCompatActivity {
         posEdit = findViewById(R.id.createPos);
         storyEdit = findViewById(R.id.createStory);
         availCharsView = findViewById(R.id.availChars);
-        addUser = findViewById(R.id.addUserPhoto);
-
-
+        addUser = findViewById(R.id.createUserPhoto);
         //Location Loading
         setLocationPrereq();
 
@@ -114,8 +119,8 @@ public class CreateActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                int len = 360 - s.toString().length();
-                String countText = "( " + len + " of 361 )";
+                int len = s.toString().length();
+                String countText = "( " + len + " of 360 )";
                 availCharsView.setText(countText);
             }
 
@@ -188,9 +193,9 @@ public class CreateActivity extends AppCompatActivity {
 
             if (!a.trim().isEmpty())
                 sb.append(" ").append(a.trim());
-
             sb.append("\n");
         }
+
         locationFromLatLong = sb.toString().trim();
         Log.d(TAG, "displayAddresses: " + sb.toString().trim());
     }
@@ -309,10 +314,7 @@ public class CreateActivity extends AppCompatActivity {
 
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-
-                Intent intent = new Intent(CreateActivity.this, UserProfileActivity.class);
-                startActivityForResult(intent, U_REQUEST_CODE);
-                //Saving data to API
+                Log.d(TAG, "onClick: OK button Clicked");
                 callAsyncAPI();
             }
         });
@@ -330,17 +332,15 @@ public class CreateActivity extends AppCompatActivity {
     }
 
     public void callAsyncAPI() {
-        String studentId = "A20405042";
-        String username = userNameEdit.getText().toString();
-        String password = passwordEdit.getText().toString();
-        String firstName = firstEdit.getText().toString();
-        String lastName = lastEdit.getText().toString();
-        int pointsToAward = 1000;
-        String department = deptEdit.getText().toString();
-        String story = storyEdit.getText().toString();
-        String position = posEdit.getText().toString();
-        boolean admin = false;
-        String rewards = "";
+        username = userNameEdit.getText().toString();
+        password = passwordEdit.getText().toString();
+        firstName = firstEdit.getText().toString();
+        lastName = lastEdit.getText().toString();
+        department = deptEdit.getText().toString();
+        story = storyEdit.getText().toString();
+        position = posEdit.getText().toString();
+        rewards = "";
+        Log.d(TAG, "callAsyncAPI: "+posEdit.getText().toString());
         new CreateProfileAPIAsyncTask(this, new CreateProfileBean(studentId, username, password, firstName, lastName, pointsToAward, department, story, position, admin, locationFromLatLong, imgString, rewards)).execute();
     }
 
@@ -374,7 +374,7 @@ public class CreateActivity extends AppCompatActivity {
         bm.compress(Bitmap.CompressFormat.JPEG, 50, bitmapAsByteArrayStream);
         imgString = Base64.encodeToString(bitmapAsByteArrayStream.toByteArray(), Base64.DEFAULT);
         Log.d(TAG, "processCamera: baseEncoder" + imgString);
-        makeCustomToast(this, String.format(Locale.getDefault(), "%,d", bm.getByteCount()), Toast.LENGTH_LONG);
+        makeCustomToast(this, "Photo Size: "+String.format(Locale.getDefault(), "%,d", bm.getByteCount()), Toast.LENGTH_LONG);
         currentImageFile.delete();
     }
 
@@ -396,7 +396,7 @@ public class CreateActivity extends AppCompatActivity {
     }
 
     public static void makeCustomToast(Context context, String message, int time) {
-        Toast toast = Toast.makeText(context, "Image Size: " + message, time);
+        Toast toast = Toast.makeText(context, "" + message, time);
         View toastView = toast.getView();
         toastView.setBackgroundColor(context.getResources().getColor(R.color.colorPrimary));
         TextView tv = toast.getView().findViewById(android.R.id.message);
@@ -405,12 +405,11 @@ public class CreateActivity extends AppCompatActivity {
         toast.show();
     }
 
-    public void getCreateProfileAPIResp(String response) {
-        try {
-            JSONObject jsonObj = new JSONObject(response);
-            Log.d(TAG, "getCreateProfileAPIResp: " + jsonObj.getString("location"));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+    public void getCreateProfileAPIResp(CreateProfileBean respBean) {
+        Log.d(TAG, "getCreateProfileAPIResp: " + respBean.getUsername() + respBean.getFirstName() + respBean.getLastName() + respBean.getLocation() + respBean.getDepartment() + respBean.getPassword() + respBean.getPosition() + respBean.getStory() + respBean.getPointsToAward());
+        Intent intent = new Intent(CreateActivity.this, UserProfileActivity.class);
+        intent.putExtra("USERPROFILE", respBean);
+        startActivity(intent);
+        makeCustomToast(this,"User Create Successful",Toast.LENGTH_SHORT);
     }
 }

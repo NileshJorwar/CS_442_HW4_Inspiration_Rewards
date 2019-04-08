@@ -73,6 +73,8 @@ public class MainActivity extends AppCompatActivity {
 
         //Storing the Login Credentials to SharedPreferences
         preferences = new RewardsPreferences(this);
+
+        Log.d(TAG, "onCreate: " + preferences.getValue(getString(R.string.pref_user)));
         unameView.setText(preferences.getValue(getString(R.string.pref_user)));
         passView.setText(preferences.getValue(getString(R.string.pref_pass)));
         credChkBox.setChecked(preferences.getBoolValue(getString(R.string.pref_check)));
@@ -123,25 +125,22 @@ public class MainActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    public void saveLoginCredentials(View view) {
+    public void onLoginBtnClick(View v) {
         if (credChkBox.isChecked()) {
+            Log.d(TAG, ":onLoginBtnClick ");
             preferences.save(getString(R.string.pref_user), unameView.getText().toString());
             preferences.save(getString(R.string.pref_pass), passView.getText().toString());
             preferences.saveBool(getString(R.string.pref_check), credChkBox.isChecked());
         }
-    }
-
-    public void onLoginBtnClick(View v) {
         String uName = unameView.getText().toString();
         String pswd = passView.getText().toString();
         new LoginAPIAsyncTask(mainActivity).execute(sId, uName, pswd);
-
     }
 
     public void onNewAccCreateClick(View v) {
         Log.d(TAG, "onNewAccCreateClick: Main");
         if (isOnline()) {
-            makeCustomToast(this, "Internet Connection", Toast.LENGTH_SHORT);
+            makeCustomToast(this, "Creating new Profile", Toast.LENGTH_SHORT);
             Intent intent = new Intent(this, CreateActivity.class);
             startActivityForResult(intent, B_REQUEST_CODE);
         } else
@@ -149,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public static void makeCustomToast(Context context, String message, int time) {
-        Toast toast = Toast.makeText(context, "Image Size: " + message, time);
+        Toast toast = Toast.makeText(context, " " + message, time);
         View toastView = toast.getView();
         toastView.setBackgroundColor(context.getResources().getColor(R.color.colorPrimary));
         TextView tv = toast.getView().findViewById(android.R.id.message);
@@ -159,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void getLoginAPIResp(CreateProfileBean respBean) {
-        Log.d(TAG, "getLoginAPIResp: " + respBean.getUsername()+ respBean.getFirstName()+ respBean.getLastName()+ respBean.getLocation()+  respBean.getDepartment()+ respBean.getPassword()+respBean.getPosition()+respBean.getStory()+respBean.getPointsToAward());
+        Log.d(TAG, "getLoginAPIResp: " + respBean.getUsername() + respBean.getFirstName() + respBean.getLastName() + respBean.getLocation() + respBean.getDepartment() + respBean.getPassword() + respBean.getPosition() + respBean.getStory() + respBean.getPointsToAward());
         Intent intent = new Intent(this, UserProfileActivity.class);
         intent.putExtra("USERPROFILE", respBean);
         startActivity(intent);

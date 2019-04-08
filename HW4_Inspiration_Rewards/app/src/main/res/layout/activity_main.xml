@@ -98,7 +98,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:checked="false"
-        android:onClick="saveLoginCredentials"
         android:text="@string/credcheckbox"
         android:textColor="#FF178E7E"
         android:textSize="18sp"

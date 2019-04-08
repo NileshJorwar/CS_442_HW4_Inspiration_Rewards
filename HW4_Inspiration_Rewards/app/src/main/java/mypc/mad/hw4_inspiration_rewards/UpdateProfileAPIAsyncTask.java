@@ -17,16 +17,16 @@ import java.net.URL;
 
 import static java.net.HttpURLConnection.HTTP_OK;
 
-public class CreateProfileAPIAsyncTask extends AsyncTask<Void, Void, String> {
+public class UpdateProfileAPIAsyncTask extends AsyncTask<Void, Void, String> {
 
-    private static final String TAG = "CreateProfileAPIAsyncTask";
+    private static final String TAG = "UpdateProfileAPIAsyncTask";
     private static final String baseUrl = "http://inspirationrewardsapi-env.6mmagpm2pv.us-east-2.elasticbeanstalk.com";
     private static final String loginEndPoint = "/profiles";
     private CreateProfileBean bean;
     @SuppressLint("StaticFieldLeak")
     private CreateActivity createActivity;
 
-    public CreateProfileAPIAsyncTask(CreateActivity createActivity,CreateProfileBean bean) {
+    public UpdateProfileAPIAsyncTask(CreateActivity createActivity,CreateProfileBean bean) {
 
         this.createActivity = createActivity;
         this.bean=bean;
@@ -84,7 +84,7 @@ public class CreateProfileAPIAsyncTask extends AsyncTask<Void, Void, String> {
             URL url = new URL(uri.toString()); // Convert URI to URL
 
             connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("POST");  // POST - others might use PUT, DELETE, GET
+            connection.setRequestMethod("PUT");  // PUT - others might use PUT, DELETE, GET
 
             // Set the Content-Type and Accept properties to use JSON data
             connection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
