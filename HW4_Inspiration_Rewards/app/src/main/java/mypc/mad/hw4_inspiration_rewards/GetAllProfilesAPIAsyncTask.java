@@ -1,10 +1,10 @@
 package mypc.mad.hw4_inspiration_rewards;
 
-import android.annotation.SuppressLint;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -14,56 +14,36 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import static java.net.HttpURLConnection.HTTP_OK;
 
-public class UpdateProfileAPIAsyncTask extends AsyncTask<Void, Void, String> {
+public class GetAllProfilesAPIAsyncTask extends AsyncTask<String, Void, String> {
+    private static final String TAG = "GetAllProfilesAPIAsyncTask";
+    private InspLeaderboardActivity inspLeaderboardActivity;
+    private final String baseurlAdress = "http://inspirationrewardsapi-env.6mmagpm2pv.us-east-2.elasticbeanstalk.com";
+    private final String loginURL = "/allprofiles";
+    private List<CreateProfileBean> inspLeaderArrayList = new ArrayList<>();
 
-    private static final String TAG = "UpdateProfileAPIAsyncTask";
-    private static final String baseUrl = "http://inspirationrewardsapi-env.6mmagpm2pv.us-east-2.elasticbeanstalk.com";
-    private static final String loginEndPoint = "/profiles";
-    private CreateProfileBean bean;
-    @SuppressLint("StaticFieldLeak")
-    private EditActivity editActivity;
-
-    public UpdateProfileAPIAsyncTask(EditActivity editActivity, CreateProfileBean bean) {
-
-        this.editActivity = editActivity;
-        this.bean = bean;
+    public GetAllProfilesAPIAsyncTask(InspLeaderboardActivity inspLeaderboardActivity) {
+        this.inspLeaderboardActivity = inspLeaderboardActivity;
     }
 
     @Override
-    protected String doInBackground(Void... voids) {
-        JSONObject jsonObject = new JSONObject();
-        String studentId = bean.studentId;
-        String username = bean.username;
-        String password = bean.password;
-        String firstName = bean.firstName;
-        String lastName = bean.lastName;
-        int pointsToAward = bean.pointsToAward;
-        String story = bean.story;
-        String department = bean.department;
-        String position = bean.position;
-        boolean admin = bean.admin;
-        String location = bean.location;
-        String imageBytes = bean.imageBytes;
-        String rewards = bean.rewards;
-        Log.d(TAG, "doInBackground: UpdateProfile" + studentId + username + password + firstName + lastName + pointsToAward + department  + position + admin + location + imageBytes + rewards);
-        try {
-            jsonObject.put("studentId", studentId);
-            jsonObject.put("username", username);
-            jsonObject.put("password", password);
-            jsonObject.put("firstName", firstName);
-            jsonObject.put("lastName", lastName);
-            jsonObject.put("pointsToAward", pointsToAward);
-            jsonObject.put("department", department);
-            jsonObject.put("story", story);
-            jsonObject.put("position", position);
-            jsonObject.put("admin", admin);
-            jsonObject.put("location", location);
-            jsonObject.put("imageBytes", imageBytes);
-            jsonObject.put("rewardRecords", rewards);
+    protected String doInBackground(String... strings) {
+        String stuId = strings[0];
+        String uName = strings[1];
+        String pswd = strings[2];
 
+        try {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("studentId", stuId);
+            jsonObject.put("username", uName);
+            jsonObject.put("password", pswd);
+
+            String ab = doAPICall(jsonObject);
+            Log.d(TAG, "doInBackground: " + ab);
             return doAPICall(jsonObject);
 
         } catch (Exception e) {
@@ -72,19 +52,20 @@ public class UpdateProfileAPIAsyncTask extends AsyncTask<Void, Void, String> {
         return null;
     }
 
+
     private String doAPICall(JSONObject jsonObject) {
         HttpURLConnection connection = null;
         BufferedReader reader = null;
 
         try {
 
-            String urlString = baseUrl + loginEndPoint;  // Build the full URL
+            String urlString = baseurlAdress + loginURL;  // Build the full URL
 
             Uri uri = Uri.parse(urlString);    // Convert String url to URI
             URL url = new URL(uri.toString()); // Convert URI to URL
 
             connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("PUT");  // PUT - others might use PUT, DELETE, GET
+            connection.setRequestMethod("POST");  // POST - others might use PUT, DELETE, GET
 
             // Set the Content-Type and Accept properties to use JSON data
             connection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
@@ -99,7 +80,7 @@ public class UpdateProfileAPIAsyncTask extends AsyncTask<Void, Void, String> {
             int responseCode = connection.getResponseCode();
 
             StringBuilder result = new StringBuilder();
-            Log.d(TAG, "doAPICall: UpdateProfile" + responseCode);
+
             // If successful (HTTP_OK)
             if (responseCode == HTTP_OK) {
 
@@ -146,11 +127,37 @@ public class UpdateProfileAPIAsyncTask extends AsyncTask<Void, Void, String> {
 
     @Override
     protected void onPostExecute(String connectionResult) {
-        Log.d(TAG, "onPostExecute: UpdateProfile"+connectionResult);
+        Log.d(TAG, "onPostExecute: " );
+        CreateProfileBean bean = null;
+        try {
+            JSONArray jsonArray = new JSONArray(connectionResult);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                String studentId=jsonObject.getString("studentId");
+                String username = jsonObject.getString("username");
+                String password = jsonObject.getString("password");
+                String firstName = jsonObject.getString("firstName");
+                String lastName = jsonObject.getString("lastName");
+                int pointsToAward = jsonObject.getInt("pointsToAward");
+                String department = jsonObject.getString("department");
+                String story = jsonObject.getString("story");
+                String position = jsonObject.getString("position");
+                boolean admin = jsonObject.getBoolean("admin");
+                String location = jsonObject.getString("location");
+                String rewards = jsonObject.getString("rewards");
+                String imageBytes = jsonObject.getString("imageBytes");
+                bean = new CreateProfileBean(studentId, username, password, firstName, lastName, pointsToAward, department, story, position, admin, location, imageBytes, rewards);
+                inspLeaderArrayList.add(bean);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        Log.d(TAG, "onPostExecute: " + inspLeaderArrayList.size());
         if (connectionResult.contains("error")) // If there is "error" in the results...
-            editActivity.getEditProfileAPIResp("FAILED");
+            inspLeaderboardActivity.getAllProfilesAPIResp(null);
         else
-            editActivity.getEditProfileAPIResp("SUCCESS");
-    }
+            inspLeaderboardActivity.getAllProfilesAPIResp(inspLeaderArrayList);
 
+
+    }
 }

@@ -100,11 +100,15 @@ public class UserProfileActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.editMenu:
                 Log.d(TAG, "onOptionsItemSelected: EditClick" + bean.getUsername() + bean.getFirstName() + bean.getLastName() + bean.getLocation() + bean.getDepartment() + bean.getPassword() + bean.getPosition() + bean.getStory() + bean.getPointsToAward());
-                Intent intent = new Intent(this, EditActivity.class);
-                intent.putExtra("EDITPROFILE", bean);
-                startActivity(intent);
+                Intent editIntent = new Intent(this, EditActivity.class);
+                editIntent.putExtra("EDITPROFILE", bean);
+                startActivity(editIntent);
                 return true;
             case R.id.dashboardMenu:
+                Log.d(TAG, "onOptionsItemSelected: DashboardClick" );
+                Intent dashboardIntent = new Intent(this, InspLeaderboardActivity.class);
+                dashboardIntent.putExtra("INSPLEADPROFILE", bean);
+                startActivity(dashboardIntent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

@@ -74,13 +74,13 @@ public class CreateActivity extends AppCompatActivity {
     private double longitude;
 
     //To Send over API
-    private String locationFromLatLong="";
+    private String locationFromLatLong = "";
     private String studentId = "A20405042";
     private String username = "";
     private String password = "";
     private String firstName = "";
     private String lastName = "";
-    private int pointsToAward =1000;
+    private int pointsToAward = 1000;
     private String department = "";
     private String story = "";
     private String position = "";
@@ -197,7 +197,7 @@ public class CreateActivity extends AppCompatActivity {
         }
 
         locationFromLatLong = sb.toString().trim();
-        Log.d(TAG, "displayAddresses: " + sb.toString().trim());
+        Log.d(TAG, "displayAddresses: " + locationFromLatLong);
     }
 
     public void recheckLocation(View v) {
@@ -252,7 +252,6 @@ public class CreateActivity extends AppCompatActivity {
         builder.setTitle("Profile Picture");
         builder.setIcon(R.drawable.logo);
         builder.setMessage("Take picture from: ");
-
         builder.setPositiveButton("GALLERY", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 doGallery();
@@ -306,12 +305,44 @@ public class CreateActivity extends AppCompatActivity {
         }
     }
 
+    private void ifNewImageIsNotSelected() {
+        Bitmap bm = ((BitmapDrawable) addUser.getDrawable()).getBitmap();
+        ByteArrayOutputStream bitmapAsByteArrayStream = new ByteArrayOutputStream();
+        bm.compress(Bitmap.CompressFormat.JPEG, 0, bitmapAsByteArrayStream);
+        imgString = Base64.encodeToString(bitmapAsByteArrayStream.toByteArray(), Base64.DEFAULT);
+        Log.d(TAG, "processCamera: baseEncoder" + imgString);
+    }
+
+    public void warningDialog(String logStmt) {
+        Log.d(TAG, logStmt);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Incomplete Profile Data!");
+        builder.setIcon(R.drawable.ic_warning_black_24dp);
+        builder.setMessage("Please fill all the fields...");
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
     public void saveChangesDialog() {
-        Log.d(TAG, "saveChangesDialog: ");
+        Log.d(TAG, "saveChangesDialog: " + locationFromLatLong + imgString);
+        //Setting the Location to Chicago, Illinois if location is not found by Location Service
+        if (locationFromLatLong.isEmpty())
+            locationFromLatLong = "Chicago, Illinois";
+        if (imgString == "")
+            ifNewImageIsNotSelected();
+        if (!userNameEdit.getText().toString().isEmpty() && !passwordEdit.getText().toString().isEmpty() && !firstEdit.getText().toString().isEmpty()
+                && !lastEdit.getText().toString().isEmpty() && !deptEdit.getText().toString().isEmpty() && !posEdit.getText().toString().isEmpty()
+                && !storyEdit.getText().toString().isEmpty() && locationFromLatLong != "" && imgString != "") {
+            saveAlertOnCreateActivity();
+        } else {
+            warningDialog("Warning dialog on Incomplete data fields");
+        }
+    }
+
+    public void saveAlertOnCreateActivity() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Save Changes?");
         builder.setIcon(R.drawable.logo);
-
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 Log.d(TAG, "onClick: OK button Clicked");
@@ -328,7 +359,6 @@ public class CreateActivity extends AppCompatActivity {
         dialog.show();
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.GREEN);
         dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.GREEN);
-
     }
 
     public void callAsyncAPI() {
@@ -340,7 +370,6 @@ public class CreateActivity extends AppCompatActivity {
         story = storyEdit.getText().toString();
         position = posEdit.getText().toString();
         rewards = "";
-        Log.d(TAG, "callAsyncAPI: "+posEdit.getText().toString());
         new CreateProfileAPIAsyncTask(this, new CreateProfileBean(studentId, username, password, firstName, lastName, pointsToAward, department, story, position, admin, locationFromLatLong, imgString, rewards)).execute();
     }
 
@@ -349,6 +378,7 @@ public class CreateActivity extends AppCompatActivity {
         Log.d(TAG, "onActivityResult: " + REQUEST_IMAGE_CAPTURE + " " + resultCode + " " + requestCode + " " + data);
         if (requestCode == REQUEST_IMAGE_GALLERY && resultCode == RESULT_OK) {
             try {
+                Log.d(TAG, "onActivityResult: Gallery camera");
                 processGallery(data);
             } catch (Exception e) {
                 makeCustomToast(this, "onActivityResult: " + e.getMessage(), Toast.LENGTH_LONG);
@@ -363,7 +393,6 @@ public class CreateActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
-
     }
 
     private void processCamera() {
@@ -374,7 +403,7 @@ public class CreateActivity extends AppCompatActivity {
         bm.compress(Bitmap.CompressFormat.JPEG, 50, bitmapAsByteArrayStream);
         imgString = Base64.encodeToString(bitmapAsByteArrayStream.toByteArray(), Base64.DEFAULT);
         Log.d(TAG, "processCamera: baseEncoder" + imgString);
-        makeCustomToast(this, "Photo Size: "+String.format(Locale.getDefault(), "%,d", bm.getByteCount()), Toast.LENGTH_LONG);
+        makeCustomToast(this, "Photo Size: " + String.format(Locale.getDefault(), "%,d", bm.getByteCount()), Toast.LENGTH_LONG);
         currentImageFile.delete();
     }
 
@@ -393,6 +422,13 @@ public class CreateActivity extends AppCompatActivity {
         final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
         addUser.setImageBitmap(selectedImage);
         makeCustomToast(this, String.format(Locale.getDefault(), "%,d", selectedImage.getByteCount()), Toast.LENGTH_LONG);
+        Bitmap bm = ((BitmapDrawable) addUser.getDrawable()).getBitmap();
+        ByteArrayOutputStream bitmapAsByteArrayStream = new ByteArrayOutputStream();
+        bm.compress(Bitmap.CompressFormat.JPEG, 50, bitmapAsByteArrayStream);
+        imgString = Base64.encodeToString(bitmapAsByteArrayStream.toByteArray(), Base64.DEFAULT);
+        makeCustomToast(this, "Image size over Network: " + bm.getByteCount(), Toast.LENGTH_LONG);
+        Log.d(TAG, "processCamera: baseEncoder" + imgString);
+
     }
 
     public static void makeCustomToast(Context context, String message, int time) {
@@ -406,10 +442,12 @@ public class CreateActivity extends AppCompatActivity {
     }
 
     public void getCreateProfileAPIResp(CreateProfileBean respBean) {
-        Log.d(TAG, "getCreateProfileAPIResp: " + respBean.getUsername() + respBean.getFirstName() + respBean.getLastName() + respBean.getLocation() + respBean.getDepartment() + respBean.getPassword() + respBean.getPosition() + respBean.getStory() + respBean.getPointsToAward());
+        Log.d(TAG, "getCreateProfileAPIResp: " + respBean.getUsername() + respBean.getFirstName()
+                + respBean.getLastName() + respBean.getLocation() + respBean.getDepartment() + respBean.getPassword()
+                + respBean.getPosition() + respBean.getStory() + respBean.getPointsToAward());
         Intent intent = new Intent(CreateActivity.this, UserProfileActivity.class);
         intent.putExtra("USERPROFILE", respBean);
         startActivity(intent);
-        makeCustomToast(this,"User Create Successful",Toast.LENGTH_SHORT);
+        makeCustomToast(this, "User Create Successful", Toast.LENGTH_SHORT);
     }
 }

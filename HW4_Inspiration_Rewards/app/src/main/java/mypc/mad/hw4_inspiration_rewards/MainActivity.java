@@ -92,18 +92,17 @@ public class MainActivity extends AppCompatActivity {
         criteria.setSpeedRequired(false);
         int permLoc = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
         int permExt = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
         List<String> listPermissionsNeeded = new ArrayList<>();
         if (permLoc != PERMISSION_GRANTED) {
             listPermissionsNeeded.add(Manifest.permission.ACCESS_FINE_LOCATION);
         }
-
         if (permExt != PERMISSION_GRANTED) {
             listPermissionsNeeded.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
         }
         if (!listPermissionsNeeded.isEmpty()) {
             ActivityCompat.requestPermissions(this, listPermissionsNeeded.toArray(new String[listPermissionsNeeded.size()]), REQUEST_ID_MULTIPLE_PERMISSIONS);
         }
-
     }
 
     public boolean isOnline() {
@@ -121,11 +120,13 @@ public class MainActivity extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(title);
         builder.setMessage(message);
+        builder.setIcon(R.drawable.ic_warning_black_24dp);
         AlertDialog dialog = builder.create();
         dialog.show();
     }
 
     public void onLoginBtnClick(View v) {
+
         if (credChkBox.isChecked()) {
             Log.d(TAG, ":onLoginBtnClick ");
             preferences.save(getString(R.string.pref_user), unameView.getText().toString());
@@ -134,7 +135,12 @@ public class MainActivity extends AppCompatActivity {
         }
         String uName = unameView.getText().toString();
         String pswd = passView.getText().toString();
-        new LoginAPIAsyncTask(mainActivity).execute(sId, uName, pswd);
+
+        if (uName.equals("") || pswd.equals("")) {
+            errorDialog("errorDialog: incomplete input fields!!", "Incomplete Input Fields", "Please Enter Valid UserName/Password");
+        } else {
+            new LoginAPIAsyncTask(mainActivity).execute(sId, uName, pswd);
+        }
     }
 
     public void onNewAccCreateClick(View v) {
@@ -162,7 +168,5 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, UserProfileActivity.class);
         intent.putExtra("USERPROFILE", respBean);
         startActivity(intent);
-
-
     }
 }

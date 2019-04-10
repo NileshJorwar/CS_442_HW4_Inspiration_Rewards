@@ -48,7 +48,7 @@ public class CreateProfileAPIAsyncTask extends AsyncTask<Void, Void, String> {
         String location=bean.location;
         String imageBytes=bean.imageBytes;
         String rewards=bean.rewards;
-        Log.d(TAG, "doInBackground: CreateProfile"+studentId+ username+ password+ firstName+ lastName+ pointsToAward+ department+ story+ position+ admin+ location+ imageBytes+ rewards);
+        Log.d(TAG, "doInBackground: CreateProfile"+studentId+ username+ password+ firstName+ lastName+ pointsToAward+ department+ position+ admin+ location+  rewards);
         try {
             jsonObject.put("studentId", studentId);
             jsonObject.put("username", username);
@@ -164,7 +164,6 @@ public class CreateProfileAPIAsyncTask extends AsyncTask<Void, Void, String> {
             String imageBytes=jsonObject.getString("imageBytes");
             bean=new CreateProfileBean("A20405042", username, password, firstName, lastName, pointsToAward, department, story, position, admin, location, imageBytes,  rewards);
 
-            Log.d(TAG, "onPostExecute: "+bean);
             if (connectionResult.contains("error")) // If there is "error" in the results...
                 createActivity.getCreateProfileAPIResp(null);
             else

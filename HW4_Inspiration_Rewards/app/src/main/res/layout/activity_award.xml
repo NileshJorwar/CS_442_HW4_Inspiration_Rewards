@@ -4,15 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".UserProfileActivity">
+    android:background="@drawable/background"
+    tools:context=".AwardActivity">
 
     <TextView
-        android:id="@+id/userProfileName"
+        android:id="@+id/awardProfileName"
         android:layout_width="wrap_content"
         android:layout_height="34dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
-        android:text="TextView"
+        android:text="textview"
         android:textAlignment="center"
         android:textSize="24sp"
         android:textStyle="bold"
@@ -20,7 +21,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/userProfileUname"
+        android:id="@+id/awardProfileUname"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_marginStart="16dp"
@@ -28,31 +29,31 @@
         android:textAlignment="viewStart"
         android:textSize="18sp"
         android:textStyle="italic"
-        app:layout_constraintBaseline_toBaselineOf="@+id/userProfileName"
-        app:layout_constraintStart_toEndOf="@+id/userProfileName" />
+        app:layout_constraintBaseline_toBaselineOf="@+id/awardProfileName"
+        app:layout_constraintStart_toEndOf="@+id/awardProfileName" />
 
     <TextView
-        android:id="@+id/userProfileLocation"
+        android:id="@+id/awardProfileLocation"
         android:layout_width="wrap_content"
         android:layout_height="31dp"
         android:layout_marginTop="8dp"
         android:textSize="18sp"
         android:textStyle="italic"
-        app:layout_constraintStart_toStartOf="@+id/userProfileName"
-        app:layout_constraintTop_toBottomOf="@+id/userProfileName" />
+        app:layout_constraintStart_toStartOf="@+id/awardProfileName"
+        app:layout_constraintTop_toBottomOf="@+id/awardProfileName" />
 
     <ImageView
-        android:id="@+id/userProfileImage"
+        android:id="@+id/awardProfileImage"
         android:layout_width="168dp"
         android:layout_height="210dp"
         android:layout_marginTop="8dp"
         android:scaleType="fitXY"
-        app:layout_constraintStart_toStartOf="@+id/userProfileLocation"
-        app:layout_constraintTop_toBottomOf="@+id/userProfileLocation"
+        app:layout_constraintStart_toStartOf="@+id/awardProfileLocation"
+        app:layout_constraintTop_toBottomOf="@+id/awardProfileLocation"
         app:srcCompat="@drawable/default_photo" />
 
     <TextView
-        android:id="@+id/userProfilePtAwardedView"
+        android:id="@+id/awardProfilePtAwardedView"
         android:layout_width="162dp"
         android:layout_height="21dp"
         android:layout_marginStart="16dp"
@@ -60,58 +61,58 @@
         android:text="@string/userProfilePtAw_view"
         android:textSize="16sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@+id/userProfileImage"
-        app:layout_constraintTop_toBottomOf="@+id/userProfileLocation" />
+        app:layout_constraintStart_toEndOf="@+id/awardProfileImage"
+        app:layout_constraintTop_toBottomOf="@+id/awardProfileLocation" />
 
     <TextView
-        android:id="@+id/userProfileDeptView"
+        android:id="@+id/awardProfileDeptView"
         android:layout_width="162dp"
         android:layout_height="25dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:text="@string/userProfileDept_view"
         android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="@+id/userProfilePtAwarded"
+        app:layout_constraintEnd_toEndOf="@+id/awardProfilePtAwarded"
         app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="@+id/userProfilePtAwarded"
-        app:layout_constraintTop_toBottomOf="@+id/userProfilePtAwarded" />
+        app:layout_constraintStart_toStartOf="@+id/awardProfilePtAwarded"
+        app:layout_constraintTop_toBottomOf="@+id/awardProfilePtAwarded" />
 
     <TextView
-        android:id="@+id/userProfilePosView"
+        android:id="@+id/awardProfilePosView"
         android:layout_width="158dp"
         android:layout_height="23dp"
         android:layout_marginTop="8dp"
         android:text="@string/userProfilePosition_view"
         android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="@+id/userProfileDept"
-        app:layout_constraintStart_toStartOf="@+id/userProfileDept"
-        app:layout_constraintTop_toBottomOf="@+id/userProfileDept" />
+        app:layout_constraintEnd_toEndOf="@+id/awardProfileDept"
+        app:layout_constraintStart_toStartOf="@+id/awardProfileDept"
+        app:layout_constraintTop_toBottomOf="@+id/awardProfileDept" />
 
     <TextView
-        android:id="@+id/userProfilePtAvailView"
+        android:id="@+id/awardProfilePtAvailView"
         android:layout_width="0dp"
         android:layout_height="22dp"
         android:layout_marginTop="8dp"
         android:text="@string/userProfilePtAva_view"
         android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="@+id/userProfilePos"
+        app:layout_constraintEnd_toEndOf="@+id/awardProfilePos"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/userProfilePos"
-        app:layout_constraintTop_toBottomOf="@+id/userProfilePos" />
+        app:layout_constraintStart_toStartOf="@+id/awardProfilePos"
+        app:layout_constraintTop_toBottomOf="@+id/awardProfilePos" />
 
     <TextView
-        android:id="@+id/userProfileUrStory"
+        android:id="@+id/awardProfileUrStory"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="Your Story:"
         android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="@+id/userProfileImage"
-        app:layout_constraintStart_toStartOf="@+id/userProfileImage"
-        app:layout_constraintTop_toBottomOf="@+id/userProfileImage" />
+        app:layout_constraintEnd_toEndOf="@+id/awardProfileImage"
+        app:layout_constraintStart_toStartOf="@+id/awardProfileImage"
+        app:layout_constraintTop_toBottomOf="@+id/awardProfileImage" />
 
     <TextView
-        android:id="@+id/userProfileStoryText"
+        android:id="@+id/awardProfileStoryText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
@@ -122,11 +123,11 @@
         android:textStyle="italic"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/userProfileUrStory"
-        app:layout_constraintTop_toBottomOf="@+id/userProfileUrStory" />
+        app:layout_constraintStart_toStartOf="@+id/awardProfileUrStory"
+        app:layout_constraintTop_toBottomOf="@+id/awardProfileUrStory" />
 
     <TextView
-        android:id="@+id/userProfileRewardHistory"
+        android:id="@+id/awardProfileRewardHistory"
         android:layout_width="147dp"
         android:layout_height="25dp"
         android:layout_marginTop="8dp"
@@ -134,54 +135,55 @@
         android:text="Reward History "
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/userProfileStoryText"
-        app:layout_constraintTop_toBottomOf="@+id/userProfileStoryText"
+        app:layout_constraintStart_toStartOf="@+id/awardProfileStoryText"
+        app:layout_constraintTop_toBottomOf="@+id/awardProfileStoryText"
         app:layout_constraintVertical_bias="0.0" />
 
     <TextView
-        android:id="@+id/userProfilePtAwarded"
+        android:id="@+id/awardProfilePtAwarded"
         android:layout_width="0dp"
         android:layout_height="24dp"
         android:layout_marginTop="2dp"
         android:textAlignment="textStart"
         android:textSize="18sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="@+id/userProfilePtAwardedView"
+        app:layout_constraintEnd_toEndOf="@+id/awardProfilePtAwardedView"
         app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="@+id/userProfilePtAwardedView"
-        app:layout_constraintTop_toBottomOf="@+id/userProfilePtAwardedView" />
+        app:layout_constraintStart_toStartOf="@+id/awardProfilePtAwardedView"
+        app:layout_constraintTop_toBottomOf="@+id/awardProfilePtAwardedView" />
 
     <TextView
-        android:id="@+id/userProfileDept"
+        android:id="@+id/awardProfileDept"
         android:layout_width="0dp"
         android:layout_height="19dp"
         android:layout_marginTop="2dp"
         android:textAlignment="textStart"
         android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="@+id/userProfileDeptView"
-        app:layout_constraintStart_toStartOf="@+id/userProfileDeptView"
-        app:layout_constraintTop_toBottomOf="@+id/userProfileDeptView" />
+        app:layout_constraintEnd_toEndOf="@+id/awardProfileDeptView"
+        app:layout_constraintStart_toStartOf="@+id/awardProfileDeptView"
+        app:layout_constraintTop_toBottomOf="@+id/awardProfileDeptView" />
 
     <TextView
-        android:id="@+id/userProfilePos"
+        android:id="@+id/awardProfilePos"
         android:layout_width="wrap_content"
         android:layout_height="25dp"
         android:layout_marginTop="8dp"
         android:textAlignment="textStart"
         android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="@+id/userProfilePosView"
+        app:layout_constraintEnd_toEndOf="@+id/awardProfilePosView"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/userProfilePosView"
-        app:layout_constraintTop_toBottomOf="@+id/userProfilePosView" />
+        app:layout_constraintStart_toStartOf="@+id/awardProfilePosView"
+        app:layout_constraintTop_toBottomOf="@+id/awardProfilePosView" />
 
     <TextView
-        android:id="@+id/userProfilePtAvail"
+        android:id="@+id/awardProfilePtAvail"
         android:layout_width="0dp"
         android:layout_height="20dp"
         android:layout_marginTop="5dp"
         android:textAlignment="textStart"
         android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="@+id/userProfilePtAvailView"
-        app:layout_constraintStart_toStartOf="@+id/userProfilePtAvailView"
-        app:layout_constraintTop_toBottomOf="@+id/userProfilePtAvailView" />
+        app:layout_constraintEnd_toEndOf="@+id/awardProfilePtAvailView"
+        app:layout_constraintStart_toStartOf="@+id/awardProfilePtAvailView"
+        app:layout_constraintTop_toBottomOf="@+id/awardProfilePtAvailView" />
+
 </android.support.constraint.ConstraintLayout>

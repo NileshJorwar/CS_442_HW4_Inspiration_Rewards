@@ -41,6 +41,7 @@ public class LoginAPIAsyncTask extends AsyncTask <String, Void, String> {
         CreateProfileBean bean = null;
         try {
             JSONObject jsonObject = new JSONObject(connectionResult);
+            String studentId=jsonObject.getString("studentId");
             String username = jsonObject.getString("username");
             String password = jsonObject.getString("password");
             String firstName = jsonObject.getString("firstName");
@@ -53,7 +54,7 @@ public class LoginAPIAsyncTask extends AsyncTask <String, Void, String> {
             String location=jsonObject.getString("location");
             String rewards = "";
             String imageBytes=jsonObject.getString("imageBytes");
-            bean=new CreateProfileBean("A20405042", username, password, firstName, lastName, pointsToAward, department, story, position, admin, location, imageBytes,  rewards);
+            bean=new CreateProfileBean(studentId, username, password, firstName, lastName, pointsToAward, department, story, position, admin, location, imageBytes,  rewards);
 
             Log.d(TAG, "onPostExecute: "+bean);
             if (connectionResult.contains("error")) // If there is "error" in the results...

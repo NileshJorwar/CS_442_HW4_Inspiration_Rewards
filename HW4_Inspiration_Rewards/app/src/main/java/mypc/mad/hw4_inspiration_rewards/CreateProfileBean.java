@@ -2,7 +2,7 @@ package mypc.mad.hw4_inspiration_rewards;
 
 import java.io.Serializable;
 
-public class CreateProfileBean implements Serializable {
+public class CreateProfileBean implements Serializable ,Comparable{
     public String studentId;
     public String username;
     public String password;
@@ -135,5 +135,11 @@ public class CreateProfileBean implements Serializable {
 
     public void setRewards(String rewards) {
         this.rewards = rewards;
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        //return getPointsToAward().compareTo(o.getPointsToAward());
+        return 0;
     }
 }
