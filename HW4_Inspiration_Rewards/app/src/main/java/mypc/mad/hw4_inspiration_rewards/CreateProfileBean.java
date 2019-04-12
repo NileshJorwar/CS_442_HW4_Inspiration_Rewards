@@ -2,7 +2,7 @@ package mypc.mad.hw4_inspiration_rewards;
 
 import java.io.Serializable;
 
-public class CreateProfileBean implements Serializable ,Comparable{
+public class CreateProfileBean implements Serializable, Comparable<CreateProfileBean> {
     public String studentId;
     public String username;
     public String password;
@@ -17,7 +17,7 @@ public class CreateProfileBean implements Serializable ,Comparable{
     public String imageBytes;
     public String rewards;
 
-    public CreateProfileBean(String studentId, String username, String password, String firstName, String lastName, int pointsToAward, String department,String story, String position, boolean admin, String location, String imageBytes, String rewards) {
+    public CreateProfileBean(String studentId, String username, String password, String firstName, String lastName, int pointsToAward, String department, String story, String position, boolean admin, String location, String imageBytes, String rewards) {
         this.studentId = studentId;
         this.username = username;
         this.password = password;
@@ -25,7 +25,7 @@ public class CreateProfileBean implements Serializable ,Comparable{
         this.lastName = lastName;
         this.pointsToAward = pointsToAward;
         this.department = department;
-        this.story=story;
+        this.story = story;
         this.position = position;
         this.admin = admin;
         this.location = location;
@@ -138,8 +138,12 @@ public class CreateProfileBean implements Serializable ,Comparable{
     }
 
     @Override
-    public int compareTo(Object o) {
-        //return getPointsToAward().compareTo(o.getPointsToAward());
-        return 0;
+    public int compareTo(CreateProfileBean o) {
+        if (this.pointsToAward > o.pointsToAward)
+            return -1;
+        if (this.pointsToAward < o.pointsToAward)
+            return 1;
+        else
+            return 0;
     }
 }

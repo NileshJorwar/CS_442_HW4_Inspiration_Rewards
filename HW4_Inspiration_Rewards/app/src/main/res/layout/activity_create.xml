@@ -22,7 +22,7 @@
     <EditText
         android:id="@+id/createUname"
         android:layout_width="224dp"
-        android:layout_height="44dp"
+        android:layout_height="36dp"
         android:layout_marginTop="12dp"
         android:layout_marginEnd="8dp"
         android:background="#D7D7D6"

@@ -52,6 +52,7 @@ public class UserProfileActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         if (intent.hasExtra("USERPROFILE")) {
+            Log.d(TAG, "onCreate: ");
             bean = (CreateProfileBean) intent.getSerializableExtra("USERPROFILE");
             Log.d(TAG, "getUserProfileAct: " + bean.getUsername() + bean.getFirstName() + bean.getLastName() + bean.getLocation() + bean.getDepartment() + bean.getPassword() + bean.getPosition() + bean.getStory() + bean.getPointsToAward());
             try {

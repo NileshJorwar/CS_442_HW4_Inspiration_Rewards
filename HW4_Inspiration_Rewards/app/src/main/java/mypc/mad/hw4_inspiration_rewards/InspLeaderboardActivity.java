@@ -1,17 +1,15 @@
 package mypc.mad.hw4_inspiration_rewards;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class InspLeaderboardActivity extends AppCompatActivity implements View.OnClickListener, View.OnLongClickListener {
@@ -47,15 +45,31 @@ public class InspLeaderboardActivity extends AppCompatActivity implements View.O
                 e.printStackTrace();
             }
         }
+        Intent rewardIntent = getIntent();
+        if (intent.hasExtra("STIDLOGIN")) {
+            Log.d(TAG, "getInspLeaderboard: to refresh Leaderboard" );
+            try {
+                new GetAllProfilesAPIAsyncTask(InspLeaderboardActivity.this).execute(rewardIntent.getStringExtra("STIDLOGIN")
+                        , rewardIntent.getStringExtra("USERLOGIN"), rewardIntent.getStringExtra("PSSLOGIN"));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
     public void onClick(View v) {
         int pos = recyclerView.getChildLayoutPosition(v);
+
         CreateProfileBean beanRec=inspLeaderArrayList.get(pos);
         Log.d(TAG, "onClick: ");
-        Intent intent = new Intent(this, AwardActivity.class);
+        Intent intent = new Intent(this, RewardActivity.class);
+        Log.d(TAG, "onClick: Login Details "+bean.getStudentId()+ " "+bean.getUsername()+ " "+bean.getPassword()+ " ");
         intent.putExtra("AWARDPROFILE", beanRec);
+        intent.putExtra("STUDENTIDLOGIN",bean.getStudentId());
+        intent.putExtra("PASSLOGIN",bean.getPassword());
+        intent.putExtra("UNAMELOGIN",bean.getUsername());
+        intent.putExtra("NAMELOGIN",bean.getFirstName()+" "+bean.getLastName());
         startActivity(intent);
     }
 
@@ -66,6 +80,7 @@ public class InspLeaderboardActivity extends AppCompatActivity implements View.O
 
     public void getAllProfilesAPIResp(List<CreateProfileBean> respBeanList) {
         Log.d(TAG, "getAllProfilesAPIResp: " + respBeanList.get(0).getUsername());
+        Collections.sort(respBeanList);
         inspLeaderArrayList.addAll(respBeanList);
         inspLeadAdapter.notifyDataSetChanged();
     }

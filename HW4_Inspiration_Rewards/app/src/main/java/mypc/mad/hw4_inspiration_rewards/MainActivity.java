@@ -148,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
         if (isOnline()) {
             makeCustomToast(this, "Creating new Profile", Toast.LENGTH_SHORT);
             Intent intent = new Intent(this, CreateActivity.class);
-            startActivityForResult(intent, B_REQUEST_CODE);
+            startActivityForResult(intent,B_REQUEST_CODE);
         } else
             makeCustomToast(this, "No Internet Connection", Toast.LENGTH_SHORT);
     }
@@ -164,6 +164,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void getLoginAPIResp(CreateProfileBean respBean) {
+        Log.d(TAG, "getLoginAPIResp: " +respBean);
+        if(respBean==null)
+        {
+            makeCustomToast(this, "Some Error has occurred", Toast.LENGTH_SHORT);
+        }
         Log.d(TAG, "getLoginAPIResp: " + respBean.getUsername() + respBean.getFirstName() + respBean.getLastName() + respBean.getLocation() + respBean.getDepartment() + respBean.getPassword() + respBean.getPosition() + respBean.getStory() + respBean.getPointsToAward());
         Intent intent = new Intent(this, UserProfileActivity.class);
         intent.putExtra("USERPROFILE", respBean);
