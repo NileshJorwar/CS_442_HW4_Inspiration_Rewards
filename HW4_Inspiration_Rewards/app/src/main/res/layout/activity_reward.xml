@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background"
+    android:focusableInTouchMode="true"
     tools:context=".RewardActivity">
 
     <TextView
@@ -158,13 +159,13 @@
         android:layout_marginEnd="16dp"
         android:background="#D6D7D7"
         android:ems="10"
-        android:inputType="textPersonName"
+        android:inputType="number"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/awardProfileRewardHistory"
         app:layout_constraintTop_toBottomOf="@+id/awardProfileStoryText" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/awardProfileCmt"
         android:layout_width="95dp"
         android:layout_height="27dp"
         android:layout_marginTop="8dp"
@@ -178,9 +179,9 @@
         android:layout_width="125dp"
         android:layout_height="27dp"
         android:layout_marginStart="28dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintStart_toEndOf="@+id/textView"
-        app:layout_constraintTop_toBottomOf="@+id/awardProfileRewardHistory" />
+        android:textSize="18sp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/awardProfileCmt"
+        app:layout_constraintStart_toEndOf="@+id/awardProfileCmt" />
 
     <EditText
         android:id="@+id/awardProfileComment"
@@ -197,7 +198,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/textView"
+        app:layout_constraintStart_toStartOf="@+id/awardProfileCmt"
         app:layout_constraintTop_toBottomOf="@+id/awardProfileCmtLen" />
 
 </android.support.constraint.ConstraintLayout>

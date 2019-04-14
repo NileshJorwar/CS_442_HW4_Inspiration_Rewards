@@ -93,8 +93,7 @@ public class CreateActivity extends AppCompatActivity {
         setContentView(R.layout.activity_create);
 
         //Setting ActionBar icon and title
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setIcon(R.drawable.arrow_with_logo);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.arrow_with_logo);
         setTitle("  Create Profile");
 
         userNameEdit = findViewById(R.id.createUname);
@@ -186,7 +185,7 @@ public class CreateActivity extends AppCompatActivity {
 
         for (Address ad : addresses) {
 
-            String a = String.format("%s %s",
+            String a = String.format("%s, %s",
                     (ad.getLocality() == null ? "" : ad.getLocality()),
                     (ad.getAdminArea() == null ? "" : ad.getAdminArea())
             );
@@ -195,7 +194,6 @@ public class CreateActivity extends AppCompatActivity {
                 sb.append(" ").append(a.trim());
             sb.append("\n");
         }
-
         locationFromLatLong = sb.toString().trim();
         Log.d(TAG, "displayAddresses: " + locationFromLatLong);
     }
@@ -257,20 +255,22 @@ public class CreateActivity extends AppCompatActivity {
                 doGallery();
             }
         });
-        builder.setNeutralButton("CAMERA", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                doCamera();
-            }
-        });
-        builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+        builder.setNeutralButton("CANCEL", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 dialog.dismiss();
+            }
+        });
+        builder.setNegativeButton("CAMERA", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+
+                doCamera();
             }
         });
         AlertDialog dialog = builder.create();
         dialog.show();
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.GREEN);
-        dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setTextColor(Color.GREEN);
+        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.GREEN);
+        dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setTextColor(Color.RED);
     }
 
     public void doCamera() {
@@ -369,8 +369,7 @@ public class CreateActivity extends AppCompatActivity {
         department = deptEdit.getText().toString();
         story = storyEdit.getText().toString();
         position = posEdit.getText().toString();
-        rewards = "";
-        new CreateProfileAPIAsyncTask(this, new CreateProfileBean(studentId, username, password, firstName, lastName, pointsToAward, department, story, position, admin, locationFromLatLong, imgString, rewards)).execute();
+        new CreateProfileAPIAsyncTask(this, new CreateProfileBean(studentId, username, password, firstName, lastName, pointsToAward, department, story, position, admin, locationFromLatLong, imgString)).execute();
     }
 
     @Override
@@ -441,13 +440,22 @@ public class CreateActivity extends AppCompatActivity {
         toast.show();
     }
 
-    public void getCreateProfileAPIResp(CreateProfileBean respBean) {
+    public void getCreateProfileAPIResp(CreateProfileBean respBean,String connectionResult) {
         Log.d(TAG, "getCreateProfileAPIResp: " + respBean.getUsername() + respBean.getFirstName()
                 + respBean.getLastName() + respBean.getLocation() + respBean.getDepartment() + respBean.getPassword()
                 + respBean.getPosition() + respBean.getStory() + respBean.getPointsToAward());
-        Intent intent = new Intent(CreateActivity.this, UserProfileActivity.class);
-        intent.putExtra("USERPROFILE", respBean);
-        startActivity(intent);
-        makeCustomToast(this, "User Create Successful", Toast.LENGTH_SHORT);
+        if(respBean==null)
+        {
+            makeCustomToast(this, connectionResult, Toast.LENGTH_SHORT);
+            return;
+        }
+        else
+        {
+            Intent intent = new Intent(CreateActivity.this, UserProfileActivity.class);
+            intent.putExtra("USERPROFILE", respBean);
+            startActivity(intent);
+            makeCustomToast(this, "User Create Successful", Toast.LENGTH_SHORT);
+        }
+
     }
 }

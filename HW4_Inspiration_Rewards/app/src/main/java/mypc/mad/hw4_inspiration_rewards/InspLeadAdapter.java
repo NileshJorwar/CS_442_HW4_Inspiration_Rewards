@@ -10,14 +10,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class InspLeadAdapter extends RecyclerView.Adapter<InspLeadViewHolder> {
     private static final String TAG = "InspLeadAdapter";
-    private List<CreateProfileBean> inspLeaderArrayList;
+    private List<InspLeaderBoardBean> inspLeaderArrayList;
     private InspLeaderboardActivity inspLeaderboardActivity;
 
-    public InspLeadAdapter(InspLeaderboardActivity inspLeaderboardActivity, List<CreateProfileBean> inspLeaderArrayList) {
+    public InspLeadAdapter(InspLeaderboardActivity inspLeaderboardActivity, List<InspLeaderBoardBean> inspLeaderArrayList) {
         this.inspLeaderArrayList = inspLeaderArrayList;
         this.inspLeaderboardActivity = inspLeaderboardActivity;
     }
@@ -35,11 +36,21 @@ public class InspLeadAdapter extends RecyclerView.Adapter<InspLeadViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull InspLeadViewHolder inspLeadViewHolder, int position) {
         Log.d(TAG, "onBindViewHolder: ");
-        CreateProfileBean createProfileBean = inspLeaderArrayList.get(position);
-        inspLeadViewHolder.inspLeadName.setText(createProfileBean.getLastName() + ", " + createProfileBean.getFirstName());
-        inspLeadViewHolder.inspLeadPosDept.setText(createProfileBean.getPosition() + ", " + createProfileBean.getDepartment());
-        inspLeadViewHolder.inspLeadPoints.setText(Integer.toString(createProfileBean.getPointsToAward()));
-        String imgString = createProfileBean.getImageBytes();
+        InspLeaderBoardBean inspLeaderBean = inspLeaderArrayList.get(position);
+        inspLeadViewHolder.inspLeadName.setText(inspLeaderBean.getLastName() + ", " + inspLeaderBean.getFirstName());
+        inspLeadViewHolder.inspLeadPosDept.setText(inspLeaderBean.getPosition() + ", " + inspLeaderBean.getDepartment());
+        /*List<RewardRecords> recList = inspLeaderBean.getRecordsArrList();
+        int rewardPtAwarded = 0;
+        if (recList!=null) {
+            for (int i = 0; i < recList.size(); i++) {
+                    RewardRecords rewardRec = recList.get(i);
+                    rewardPtAwarded += rewardRec.getValue();
+                }
+        }
+        inspLeadViewHolder.inspLeadPoints.setText(""+rewardPtAwarded);
+        */
+        inspLeadViewHolder.inspLeadPoints.setText(""+inspLeaderBean.rewardPtAward);
+        String imgString = inspLeaderBean.getImageBytes();
         byte[] imageBytes = Base64.decode(imgString, Base64.DEFAULT);
         Bitmap bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
         inspLeadViewHolder.inspLeadImge.setImageBitmap(bitmap);

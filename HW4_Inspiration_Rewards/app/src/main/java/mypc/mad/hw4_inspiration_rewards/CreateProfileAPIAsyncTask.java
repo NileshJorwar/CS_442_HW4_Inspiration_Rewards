@@ -23,32 +23,32 @@ public class CreateProfileAPIAsyncTask extends AsyncTask<Void, Void, String> {
     private static final String baseUrl = "http://inspirationrewardsapi-env.6mmagpm2pv.us-east-2.elasticbeanstalk.com";
     private static final String loginEndPoint = "/profiles";
     private CreateProfileBean bean;
+    private int ourcode = -1;
     @SuppressLint("StaticFieldLeak")
     private CreateActivity createActivity;
 
-    public CreateProfileAPIAsyncTask(CreateActivity createActivity,CreateProfileBean bean) {
+    public CreateProfileAPIAsyncTask(CreateActivity createActivity, CreateProfileBean bean) {
 
         this.createActivity = createActivity;
-        this.bean=bean;
+        this.bean = bean;
     }
 
     @Override
     protected String doInBackground(Void... voids) {
         JSONObject jsonObject = new JSONObject();
-        String studentId=bean.studentId;
-        String username=bean.username;
-        String password=bean.password;
-        String firstName=bean.firstName;
-        String lastName=bean.lastName;
-        int pointsToAward=bean.pointsToAward;
-        String story=bean.story;
-        String department=bean.department;
-        String position=bean.position;
-        boolean admin=bean.admin;
-        String location=bean.location;
-        String imageBytes=bean.imageBytes;
-        String rewards=bean.rewards;
-        Log.d(TAG, "doInBackground: CreateProfile"+studentId+ username+ password+ firstName+ lastName+ pointsToAward+ department+ position+ admin+ location+  rewards);
+        String studentId = bean.studentId;
+        String username = bean.username;
+        String password = bean.password;
+        String firstName = bean.firstName;
+        String lastName = bean.lastName;
+        int pointsToAward = bean.pointsToAward;
+        String story = bean.story;
+        String department = bean.department;
+        String position = bean.position;
+        boolean admin = bean.admin;
+        String location = bean.location;
+        String imageBytes = bean.imageBytes;
+        Log.d(TAG, "doInBackground: CreateProfile" + studentId + username + password + firstName + lastName + pointsToAward + department + position + admin + location);
         try {
             jsonObject.put("studentId", studentId);
             jsonObject.put("username", username);
@@ -62,7 +62,7 @@ public class CreateProfileAPIAsyncTask extends AsyncTask<Void, Void, String> {
             jsonObject.put("admin", admin);
             jsonObject.put("location", location);
             jsonObject.put("imageBytes", imageBytes);
-            jsonObject.put("rewardRecords", rewards);
+            jsonObject.put("rewardRecords", "[]");
 
             return doAPICall(jsonObject);
 
@@ -99,10 +99,10 @@ public class CreateProfileAPIAsyncTask extends AsyncTask<Void, Void, String> {
             int responseCode = connection.getResponseCode();
 
             StringBuilder result = new StringBuilder();
-            Log.d(TAG, "doAPICall: CreateProfile"+responseCode);
+            Log.d(TAG, "doAPICall: CreateProfile" + responseCode);
             // If successful (HTTP_OK)
             if (responseCode == HTTP_OK) {
-
+                ourcode = responseCode;
                 // Read the results - use connection's getInputStream
                 reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
                 String line;
@@ -115,6 +115,7 @@ public class CreateProfileAPIAsyncTask extends AsyncTask<Void, Void, String> {
 
             } else {
                 // Not HTTP_OK - some error occurred - use connection's getErrorStream
+                ourcode = responseCode;
                 reader = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
                 String line;
                 while (null != (line = reader.readLine())) {
@@ -146,31 +147,43 @@ public class CreateProfileAPIAsyncTask extends AsyncTask<Void, Void, String> {
 
     @Override
     protected void onPostExecute(String connectionResult) {
-        Log.d(TAG, "onPostExecute: "+connectionResult);
+        Log.d(TAG, "onPostExecute: " + connectionResult);
         CreateProfileBean bean = null;
-        try {
-            JSONObject jsonObject = new JSONObject(connectionResult);
-            String username = jsonObject.getString("username");
-            String password = jsonObject.getString("password");
-            String firstName = jsonObject.getString("firstName");
-            String lastName = jsonObject.getString("lastName");
-            int pointsToAward = jsonObject.getInt("pointsToAward");
-            String department = jsonObject.getString("department");
-            String story = jsonObject.getString("story");
-            String position = jsonObject.getString("position");
-            boolean admin = jsonObject.getBoolean("admin");
-            String location=jsonObject.getString("location");
-            String rewards = "";
-            String imageBytes=jsonObject.getString("imageBytes");
-            bean=new CreateProfileBean("A20405042", username, password, firstName, lastName, pointsToAward, department, story, position, admin, location, imageBytes,  rewards);
+        if (ourcode == HTTP_OK) {
+            try {
+                JSONObject jsonObject = new JSONObject(connectionResult);
+                String username = jsonObject.getString("username");
+                String password = jsonObject.getString("password");
+                String firstName = jsonObject.getString("firstName");
+                String lastName = jsonObject.getString("lastName");
+                int pointsToAward = jsonObject.getInt("pointsToAward");
+                String department = jsonObject.getString("department");
+                String story = jsonObject.getString("story");
+                String position = jsonObject.getString("position");
+                boolean admin = jsonObject.getBoolean("admin");
+                String location = jsonObject.getString("location");
+                String imageBytes = jsonObject.getString("imageBytes");
+                bean = new CreateProfileBean("A20405042", username, password, firstName, lastName, pointsToAward, department, story, position, admin, location, imageBytes);
+                createActivity.getCreateProfileAPIResp(bean, "Profile Created Successfully.");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        } else if (ourcode == -1) {
+            createActivity.getCreateProfileAPIResp(null, "Some other error occured");
+        } else {
+            Log.d(TAG, "onPostExecute: Inside else ");
+            try {
+                JSONObject errorDetailsJson = new JSONObject(connectionResult);
+                JSONObject errorJsonMsg = errorDetailsJson.getJSONObject("errordetails");
+                String errorMsg = errorJsonMsg.getString("message");
+                Log.d(TAG, "onPostExecute: Error " + errorMsg);
+                createActivity.getCreateProfileAPIResp(null, errorMsg.split("\\{")[0].trim());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
 
-            if (connectionResult.contains("error")) // If there is "error" in the results...
-                createActivity.getCreateProfileAPIResp(null);
-            else
-                createActivity.getCreateProfileAPIResp(bean);
-        } catch (JSONException e) {
-            e.printStackTrace();
         }
+
 
     }
 

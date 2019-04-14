@@ -20,7 +20,9 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import static java.net.HttpURLConnection.HTTP_OK;
@@ -30,7 +32,7 @@ public class LoginAPIAsyncTask extends AsyncTask<String, Void, String> {
     private MainActivity mainActivity;
     private final String baseurlAdress = "http://inspirationrewardsapi-env.6mmagpm2pv.us-east-2.elasticbeanstalk.com";
     private final String loginURL = "/login";
-
+    private int ourcode=-1;
     public LoginAPIAsyncTask(MainActivity ma) {
         mainActivity = ma;
     }
@@ -39,9 +41,8 @@ public class LoginAPIAsyncTask extends AsyncTask<String, Void, String> {
     protected void onPostExecute(String connectionResult) {
         Log.d(TAG, "onPostExecute: " + connectionResult);
         CreateProfileBean bean = null;
-        if (connectionResult.contains("error")) // If there is "error" in the results...
-            mainActivity.getLoginAPIResp(bean);
-        else {
+        if (ourcode == HTTP_OK)
+        {
             try {
                 JSONObject jsonObject = new JSONObject(connectionResult);
                 String studentId = jsonObject.getString("studentId");
@@ -55,17 +56,53 @@ public class LoginAPIAsyncTask extends AsyncTask<String, Void, String> {
                 String position = jsonObject.getString("position");
                 boolean admin = jsonObject.getBoolean("admin");
                 String location = jsonObject.getString("location");
-                String rewards = "";
                 String imageBytes = jsonObject.getString("imageBytes");
-                bean = new CreateProfileBean(studentId, username, password, firstName, lastName, pointsToAward, department, story, position, admin, location, imageBytes, rewards);
-                Log.d(TAG, "onPostExecute: " + bean);
-                mainActivity.getLoginAPIResp(bean);
 
+                List<RewardRecords> rewardsList=new ArrayList<>();
+                if(jsonObject.getJSONArray("rewards")!=null)
+                {
+                    JSONArray rewards = jsonObject.getJSONArray("rewards");
+                    for(int i=0;i<rewards.length();i++)
+                    {
+                        RewardRecords rewardRecordsBean=new RewardRecords();
+                        JSONObject reward=rewards.getJSONObject(i);
+                        String studentIdR = reward.getString("studentId");
+                        String usernameR = reward.getString("username");
+                        String nameR = reward.getString("name");
+                        String notesR = reward.getString("notes");
+                        String dateR = reward.getString("date");
+                        int valueR = reward.getInt("value");
+                        rewardRecordsBean.setStudentId(studentIdR);
+                        rewardRecordsBean.setUsernameRecord(usernameR);
+                        rewardRecordsBean.setName(nameR);
+                        rewardRecordsBean.setDate(dateR);
+                        rewardRecordsBean.setNotes(notesR);
+                        rewardRecordsBean.setValue(valueR);
+                        rewardsList.add(rewardRecordsBean);
+                    }
+                }
+
+                bean = new CreateProfileBean(studentId, username, password, firstName, lastName, pointsToAward, department, story, position, admin, location, imageBytes);
+                Log.d(TAG, "onPostExecute: " + bean);
+                mainActivity.getLoginAPIResp(bean,rewardsList,"SUCCESS");
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
-
+        else if (ourcode == -1)
+            mainActivity.getLoginAPIResp(null,null,"Some Other Error Occured");
+        else {
+            Log.d(TAG, "onPostExecute: Inside else ");
+            try {
+                JSONObject errorDetailsJson = new JSONObject(connectionResult);
+                JSONObject errorJsonMsg = errorDetailsJson.getJSONObject("errordetails");
+                String errorMsg = errorJsonMsg.getString("message");
+                Log.d(TAG, "onPostExecute: Error " + errorMsg);
+                mainActivity.getLoginAPIResp(null,null,errorMsg.split("\\{")[0].trim());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
@@ -121,7 +158,7 @@ public class LoginAPIAsyncTask extends AsyncTask<String, Void, String> {
             Log.d(TAG, "doAPICall: response" + responseCode);
             // If successful (HTTP_OK)
             if (responseCode == HTTP_OK) {
-
+                ourcode=responseCode;
                 // Read the results - use connection's getInputStream
                 reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
                 String line;
@@ -134,6 +171,7 @@ public class LoginAPIAsyncTask extends AsyncTask<String, Void, String> {
 
             } else {
                 // Not HTTP_OK - some error occurred - use connection's getErrorStream
+                ourcode=responseCode;
                 reader = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
                 String line;
                 while (null != (line = reader.readLine())) {

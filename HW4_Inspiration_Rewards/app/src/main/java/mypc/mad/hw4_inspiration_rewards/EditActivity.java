@@ -41,6 +41,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -91,14 +93,13 @@ public class EditActivity extends AppCompatActivity {
     private Criteria criteria;
     private double latitude;
     private double longitude;
-
+    private List<RewardRecords> rewardArrayList = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit);
         //Setting ActionBar icon and title
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setIcon(R.drawable.icon);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.arrow_with_logo);
         setTitle("  Edit Profile");
 
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
@@ -114,6 +115,7 @@ public class EditActivity extends AppCompatActivity {
         storyEdit = findViewById(R.id.editStory);
         availCharsView = findViewById(R.id.editAvailChars);
         userPhoto = findViewById(R.id.editUserPhoto);
+
         storyEdit.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -215,7 +217,7 @@ public class EditActivity extends AppCompatActivity {
 
         for (Address ad : addresses) {
 
-            String a = String.format("%s %s",
+            String a = String.format("%s, %s",
                     (ad.getLocality() == null ? "" : ad.getLocality()),
                     (ad.getAdminArea() == null ? "" : ad.getAdminArea())
             );
@@ -251,6 +253,12 @@ public class EditActivity extends AppCompatActivity {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }
+        Intent arrListIntent=getIntent();
+        if (intent.hasExtra("EDITPROFILE_LIST")) {
+            List<RewardRecords> list=new ArrayList<>();
+            list=(List<RewardRecords>) intent.getSerializableExtra("EDITPROFILE_LIST");
+            rewardArrayList.addAll(list);
         }
     }
 
@@ -355,20 +363,22 @@ public class EditActivity extends AppCompatActivity {
                 doGallery();
             }
         });
-        builder.setNeutralButton("CAMERA", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                doCamera();
-            }
-        });
-        builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+        builder.setNeutralButton("CANCEL", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 dialog.dismiss();
+            }
+        });
+        builder.setNegativeButton("CAMERA", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+
+                doCamera();
             }
         });
         AlertDialog dialog = builder.create();
         dialog.show();
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.GREEN);
-        dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setTextColor(Color.GREEN);
+        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.GREEN);
+        dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setTextColor(Color.RED);
     }
 
     public void doCamera() {
@@ -460,19 +470,29 @@ public class EditActivity extends AppCompatActivity {
         department = deptEdit.getText().toString();
         story = storyEdit.getText().toString();
         position = posEdit.getText().toString();
-        rewards = "";
         Log.d(TAG, "callAsyncAPI: " + imgString);
-        respBean = new CreateProfileBean(studentId, username, password, firstName, lastName, pointsToAward, department, story, position, admin, locationFromLatLong, imgString, rewards);
-        new UpdateProfileAPIAsyncTask(this, respBean).execute();
+        respBean = new CreateProfileBean(studentId, username, password, firstName, lastName, pointsToAward, department, story, position, admin, locationFromLatLong, imgString);
+        new UpdateProfileAPIAsyncTask(this, respBean,rewardArrayList).execute();
     }
 
     public void getEditProfileAPIResp(String result) {
         Log.d(TAG, "getEditProfileAPIResp: " + result);
+
         if (result.trim().equals("SUCCESS")) {
             Intent intent = new Intent(this, UserProfileActivity.class);
+            intent.putExtra("USERPROFILE_LIST", (Serializable) rewardArrayList);
             intent.putExtra("USERPROFILE", respBean);
             startActivity(intent);
             makeCustomToast(EditActivity.this, "User Update Successful", Toast.LENGTH_SHORT);
+        }
+        else
+        {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Error");
+            builder.setIcon(R.drawable.ic_warning_black_24dp);
+            builder.setMessage(result);
+            AlertDialog dialog = builder.create();
+            dialog.show();
         }
 
     }

@@ -49,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
     private static int MY_LOCATION_REQUEST_CODE = 329;
     private static int MY_EXT_STORAGE_REQUEST_CODE = 330;
     MainActivity mainActivity = this;
+    private ArrayList<RewardRecords> rewardsArrList = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -148,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
         if (isOnline()) {
             makeCustomToast(this, "Creating new Profile", Toast.LENGTH_SHORT);
             Intent intent = new Intent(this, CreateActivity.class);
-            startActivityForResult(intent,B_REQUEST_CODE);
+            startActivityForResult(intent, B_REQUEST_CODE);
         } else
             makeCustomToast(this, "No Internet Connection", Toast.LENGTH_SHORT);
     }
@@ -163,15 +164,17 @@ public class MainActivity extends AppCompatActivity {
         toast.show();
     }
 
-    public void getLoginAPIResp(CreateProfileBean respBean) {
-        Log.d(TAG, "getLoginAPIResp: " +respBean);
-        if(respBean==null)
-        {
-            makeCustomToast(this, "Some Error has occurred", Toast.LENGTH_SHORT);
+    public void getLoginAPIResp(CreateProfileBean respBean, List<RewardRecords> rewardsList, String connectionResult) {
+        Log.d(TAG, "getLoginAPIResp: " + respBean);
+        if (respBean == null) {
+            makeCustomToast(this, connectionResult, Toast.LENGTH_SHORT);
+            return;
+        } else {
+            Log.d(TAG, "getLoginAPIResp: " + respBean.getUsername() + respBean.getFirstName() + respBean.getLastName() + respBean.getLocation() + respBean.getDepartment() + respBean.getPassword() + respBean.getPosition() + respBean.getStory() + respBean.getPointsToAward());
+            Intent intent = new Intent(this, UserProfileActivity.class);
+            intent.putExtra("USERPROFILE", respBean);
+            intent.putExtra("USERPROFILE_LIST", (Serializable) rewardsList);
+            startActivity(intent);
         }
-        Log.d(TAG, "getLoginAPIResp: " + respBean.getUsername() + respBean.getFirstName() + respBean.getLastName() + respBean.getLocation() + respBean.getDepartment() + respBean.getPassword() + respBean.getPosition() + respBean.getStory() + respBean.getPointsToAward());
-        Intent intent = new Intent(this, UserProfileActivity.class);
-        intent.putExtra("USERPROFILE", respBean);
-        startActivity(intent);
     }
 }

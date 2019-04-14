@@ -1,8 +1,10 @@
 package mypc.mad.hw4_inspiration_rewards;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
-public class CreateProfileBean implements Serializable, Comparable<CreateProfileBean> {
+public class InspLeaderBoardBean implements Serializable, Comparable<InspLeaderBoardBean> {
     public String studentId;
     public String username;
     public String password;
@@ -15,8 +17,9 @@ public class CreateProfileBean implements Serializable, Comparable<CreateProfile
     public boolean admin;
     public String location;
     public String imageBytes;
-
-    public CreateProfileBean(String studentId, String username, String password, String firstName, String lastName, int pointsToAward, String department, String story, String position, boolean admin, String location, String imageBytes) {
+    public int rewardPtAward = 0;
+    public List<RewardRecords> recordsArrList;
+    public InspLeaderBoardBean(String studentId, String username, String password, String firstName, String lastName, int pointsToAward, String department, String story, String position, boolean admin, String location, String imageBytes,List<RewardRecords> recordsArrList) {
         this.studentId = studentId;
         this.username = username;
         this.password = password;
@@ -29,6 +32,24 @@ public class CreateProfileBean implements Serializable, Comparable<CreateProfile
         this.admin = admin;
         this.location = location;
         this.imageBytes = imageBytes;
+        this.recordsArrList=recordsArrList;
+        computePtAwarded();
+    }
+    public void computePtAwarded(){
+
+        if (recordsArrList!=null) {
+            for (int i = 0; i < recordsArrList.size(); i++) {
+                RewardRecords rewardRec = recordsArrList.get(i);
+                rewardPtAward += rewardRec.getValue();
+            }
+        }
+    }
+    public List<RewardRecords> getRecordsArrList() {
+        return recordsArrList;
+    }
+
+    public void setRecordsArrList(List<RewardRecords> recordsArrList) {
+        this.recordsArrList = recordsArrList;
     }
 
     public String getStudentId() {
@@ -126,12 +147,13 @@ public class CreateProfileBean implements Serializable, Comparable<CreateProfile
     public void setImageBytes(String imageBytes) {
         this.imageBytes = imageBytes;
     }
-    
+
     @Override
-    public int compareTo(CreateProfileBean o) {
-        if (this.pointsToAward > o.pointsToAward)
+    public int compareTo(InspLeaderBoardBean o) {
+
+        if (this.rewardPtAward > o.rewardPtAward)
             return -1;
-        if (this.pointsToAward < o.pointsToAward)
+        if (this.rewardPtAward < o.rewardPtAward)
             return 1;
         else
             return 0;

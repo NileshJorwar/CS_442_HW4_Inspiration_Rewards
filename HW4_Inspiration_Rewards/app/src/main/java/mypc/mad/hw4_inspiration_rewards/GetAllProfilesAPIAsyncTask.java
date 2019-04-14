@@ -24,8 +24,8 @@ public class GetAllProfilesAPIAsyncTask extends AsyncTask<String, Void, String> 
     private InspLeaderboardActivity inspLeaderboardActivity;
     private final String baseurlAdress = "http://inspirationrewardsapi-env.6mmagpm2pv.us-east-2.elasticbeanstalk.com";
     private final String loginURL = "/allprofiles";
-    private List<CreateProfileBean> inspLeaderArrayList = new ArrayList<>();
-
+    private List<InspLeaderBoardBean> inspLeaderArrayList =new ArrayList<>() ;
+    int ourcode=-1;
     public GetAllProfilesAPIAsyncTask(InspLeaderboardActivity inspLeaderboardActivity) {
         this.inspLeaderboardActivity = inspLeaderboardActivity;
     }
@@ -42,8 +42,7 @@ public class GetAllProfilesAPIAsyncTask extends AsyncTask<String, Void, String> 
             jsonObject.put("username", uName);
             jsonObject.put("password", pswd);
 
-            String ab = doAPICall(jsonObject);
-            Log.d(TAG, "doInBackground: " + ab);
+            Log.d(TAG, "doInBackground: " );
             return doAPICall(jsonObject);
 
         } catch (Exception e) {
@@ -83,7 +82,7 @@ public class GetAllProfilesAPIAsyncTask extends AsyncTask<String, Void, String> 
 
             // If successful (HTTP_OK)
             if (responseCode == HTTP_OK) {
-
+                ourcode=responseCode;
                 // Read the results - use connection's getInputStream
                 reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
                 String line;
@@ -96,6 +95,7 @@ public class GetAllProfilesAPIAsyncTask extends AsyncTask<String, Void, String> 
 
             } else {
                 // Not HTTP_OK - some error occurred - use connection's getErrorStream
+                ourcode=responseCode;
                 reader = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
                 String line;
                 while (null != (line = reader.readLine())) {
@@ -128,35 +128,75 @@ public class GetAllProfilesAPIAsyncTask extends AsyncTask<String, Void, String> 
     @Override
     protected void onPostExecute(String connectionResult) {
         Log.d(TAG, "onPostExecute: " );
-        CreateProfileBean bean = null;
-        try {
-            JSONArray jsonArray = new JSONArray(connectionResult);
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject jsonObject = jsonArray.getJSONObject(i);
-                String studentId=jsonObject.getString("studentId");
-                String username = jsonObject.getString("username");
-                String password = jsonObject.getString("password");
-                String firstName = jsonObject.getString("firstName");
-                String lastName = jsonObject.getString("lastName");
-                int pointsToAward = jsonObject.getInt("pointsToAward");
-                String department = jsonObject.getString("department");
-                String story = jsonObject.getString("story");
-                String position = jsonObject.getString("position");
-                boolean admin = jsonObject.getBoolean("admin");
-                String location = jsonObject.getString("location");
-                String rewards = jsonObject.getString("rewards");
-                String imageBytes = jsonObject.getString("imageBytes");
-                bean = new CreateProfileBean(studentId, username, password, firstName, lastName, pointsToAward, department, story, position, admin, location, imageBytes, rewards);
-                inspLeaderArrayList.add(bean);
+        InspLeaderBoardBean bean;
+        if (ourcode == HTTP_OK) {
+            try {
+                JSONArray jsonArray = new JSONArray(connectionResult);
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                    String studentId = jsonObject.getString("studentId");
+                    String username = jsonObject.getString("username");
+                    String password = jsonObject.getString("password");
+                    String firstName = jsonObject.getString("firstName");
+                    String lastName = jsonObject.getString("lastName");
+                    int pointsToAward = jsonObject.getInt("pointsToAward");
+                    String department = jsonObject.getString("department");
+                    String story = jsonObject.getString("story");
+                    String position = jsonObject.getString("position");
+                    boolean admin = jsonObject.getBoolean("admin");
+                    String location = jsonObject.getString("location");
+                    String imageBytes = jsonObject.getString("imageBytes");
+                    String rewards1 = jsonObject.getString("rewards");
+
+                    List<RewardRecords> rewardsList = new ArrayList<>();
+
+                    if (rewards1 != "null") {
+                        JSONArray rewards = new JSONArray(rewards1);
+                        for (int j = 0; j < rewards.length(); j++) {
+                            RewardRecords rewardRecordsBean = new RewardRecords();
+                            JSONObject reward = rewards.getJSONObject(j);
+                            String studentIdR = reward.getString("studentId");
+                            String usernameR = reward.getString("username");
+                            String nameR = reward.getString("name");
+                            String notesR = reward.getString("notes");
+                            String dateR = reward.getString("date");
+                            int valueR = reward.getInt("value");
+                            rewardRecordsBean.setStudentId(studentIdR);
+                            rewardRecordsBean.setUsernameRecord(usernameR);
+                            rewardRecordsBean.setName(nameR);
+                            rewardRecordsBean.setDate(dateR);
+                            rewardRecordsBean.setNotes(notesR);
+                            rewardRecordsBean.setValue(valueR);
+                            rewardsList.add(rewardRecordsBean);
+                        }
+                        bean = new InspLeaderBoardBean(studentId, username, password, firstName, lastName, pointsToAward, department, story, position, admin, location, imageBytes, rewardsList);
+                    }
+                    else
+                        bean = new InspLeaderBoardBean(studentId, username, password, firstName, lastName, pointsToAward, department, story, position, admin, location, imageBytes, null);
+                    inspLeaderArrayList.add(bean);
+                }
+                inspLeaderboardActivity.getAllProfilesAPIResp(inspLeaderArrayList,"SUCCESS");
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
-        } catch (JSONException e) {
-            e.printStackTrace();
         }
-        Log.d(TAG, "onPostExecute: " + inspLeaderArrayList.size());
-        if (connectionResult.contains("error")) // If there is "error" in the results...
-            inspLeaderboardActivity.getAllProfilesAPIResp(null);
+        else if (ourcode == -1)
+            inspLeaderboardActivity.getAllProfilesAPIResp(null,"Some Other Error Occured");
         else
-            inspLeaderboardActivity.getAllProfilesAPIResp(inspLeaderArrayList);
+        {
+            Log.d(TAG, "onPostExecute: Inside else ");
+            try {
+                JSONObject errorDetailsJson = new JSONObject(connectionResult);
+                JSONObject errorJsonMsg = errorDetailsJson.getJSONObject("errordetails");
+                String errorMsg = errorJsonMsg.getString("message");
+                Log.d(TAG, "onPostExecute: Error " + errorMsg);
+                inspLeaderboardActivity.getAllProfilesAPIResp(null,errorMsg.split("\\{")[0].trim());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }
+
 
 
     }

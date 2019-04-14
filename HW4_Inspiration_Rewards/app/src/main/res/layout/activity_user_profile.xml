@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".UserProfileActivity">
+
+<android.support.constraint.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <TextView
         android:id="@+id/userProfileName"
@@ -13,6 +17,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
         android:text="TextView"
+
         android:textAlignment="center"
         android:textSize="24sp"
         android:textStyle="bold"
@@ -53,21 +58,22 @@
 
     <TextView
         android:id="@+id/userProfilePtAwardedView"
-        android:layout_width="162dp"
+        android:layout_width="0dp"
         android:layout_height="21dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
         android:text="@string/userProfilePtAw_view"
         android:textSize="16sp"
         android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/userProfileImage"
         app:layout_constraintTop_toBottomOf="@+id/userProfileLocation" />
 
     <TextView
         android:id="@+id/userProfileDeptView"
-        android:layout_width="162dp"
-        android:layout_height="25dp"
-        android:layout_marginStart="8dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="@string/userProfileDept_view"
         android:textSize="16sp"
@@ -78,8 +84,8 @@
 
     <TextView
         android:id="@+id/userProfilePosView"
-        android:layout_width="158dp"
-        android:layout_height="23dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="@string/userProfilePosition_view"
         android:textSize="16sp"
@@ -90,7 +96,7 @@
     <TextView
         android:id="@+id/userProfilePtAvailView"
         android:layout_width="0dp"
-        android:layout_height="22dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="@string/userProfilePtAva_view"
         android:textSize="16sp"
@@ -118,6 +124,8 @@
         android:gravity="top"
         android:inputType="textMultiLine"
         android:maxLength="360"
+        android:background="#D7D7D6"
+        android:alpha="0.8"
         android:textSize="16sp"
         android:textStyle="italic"
         app:layout_constraintEnd_toEndOf="parent"
@@ -127,22 +135,20 @@
 
     <TextView
         android:id="@+id/userProfileRewardHistory"
-        android:layout_width="147dp"
-        android:layout_height="25dp"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginTop="8dp"
-        android:layout_marginBottom="104dp"
         android:text="Reward History "
         android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@+id/userProfileStoryText"
-        app:layout_constraintTop_toBottomOf="@+id/userProfileStoryText"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/userProfileStoryText" />
 
     <TextView
         android:id="@+id/userProfilePtAwarded"
         android:layout_width="0dp"
-        android:layout_height="24dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="2dp"
+        android:text="0"
         android:textAlignment="textStart"
         android:textSize="18sp"
         android:textStyle="bold"
@@ -154,7 +160,7 @@
     <TextView
         android:id="@+id/userProfileDept"
         android:layout_width="0dp"
-        android:layout_height="19dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="2dp"
         android:textAlignment="textStart"
         android:textSize="18sp"
@@ -164,9 +170,9 @@
 
     <TextView
         android:id="@+id/userProfilePos"
-        android:layout_width="wrap_content"
-        android:layout_height="25dp"
-        android:layout_marginTop="8dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
         android:textAlignment="textStart"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="@+id/userProfilePosView"
@@ -177,11 +183,36 @@
     <TextView
         android:id="@+id/userProfilePtAvail"
         android:layout_width="0dp"
-        android:layout_height="20dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:textAlignment="textStart"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="@+id/userProfilePtAvailView"
         app:layout_constraintStart_toStartOf="@+id/userProfilePtAvailView"
         app:layout_constraintTop_toBottomOf="@+id/userProfilePtAvailView" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/userProfileRecycler"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:alpha="0.8"
+        android:background="#D7D7D6"
+
+        app:layout_constraintEnd_toEndOf="@+id/userProfileStoryText"
+        app:layout_constraintStart_toStartOf="@+id/userProfileRewardHistory"
+        app:layout_constraintTop_toBottomOf="@+id/userProfileRewardHistory" />
+
+    <TextView
+        android:id="@+id/userProfileCommentsCnt"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="278dp"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/userProfileRewardHistory"
+        app:layout_constraintTop_toBottomOf="@+id/userProfileStoryText" />
 </android.support.constraint.ConstraintLayout>
+    </ScrollView>

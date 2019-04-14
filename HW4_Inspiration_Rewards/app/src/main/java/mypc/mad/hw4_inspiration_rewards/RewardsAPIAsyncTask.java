@@ -63,7 +63,6 @@ public class RewardsAPIAsyncTask extends AsyncTask<Void, Void, String> {
             jsonToSend.put("target", targetJson);
             jsonToSend.put("source", sourceJson);
             Log.d(TAG, "input JSON" + jsonToSend);
-            Log.d(TAG, "doInBackground: Returned String " + doAPICall(jsonToSend));
             return doAPICall(jsonToSend);
 
         } catch (Exception e) {

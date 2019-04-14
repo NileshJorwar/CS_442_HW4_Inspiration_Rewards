@@ -38,7 +38,7 @@ public class RewardActivity extends AppCompatActivity {
     private EditText rewardPintsToEdit;
     private EditText commentsEdit;
     private TextView commentLenView;
-    CreateProfileBean bean = null;
+    InspLeaderBoardBean bean = null;
 
     //To send over API
     private String studentIdSource = "";
@@ -57,7 +57,7 @@ public class RewardActivity extends AppCompatActivity {
         setContentView(R.layout.activity_reward);
         //Setting ActionBar icon and title
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setIcon(R.drawable.arrow_with_logo);
+        getSupportActionBar().setIcon(R.drawable.icon);
 
         name = findViewById(R.id.awardProfileName);
         location = findViewById(R.id.awardProfileLocation);
@@ -89,14 +89,14 @@ public class RewardActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         if (intent.hasExtra("AWARDPROFILE")) {
-            bean = (CreateProfileBean) intent.getSerializableExtra("AWARDPROFILE");
+            bean = (InspLeaderBoardBean) intent.getSerializableExtra("AWARDPROFILE");
             Log.d(TAG, "getAwardProfileAct: " + bean.getImageBytes().length() + bean.getUsername() + bean.getFirstName() + bean.getLastName() + bean.getLocation() + bean.getDepartment() + bean.getPassword() + bean.getPosition() + bean.getStory() + bean.getPointsToAward());
             try {
                 setTitle(" " + bean.getFirstName() + " " + bean.getLastName());
                 name.setText(bean.getLastName() + ", " + bean.getFirstName());
                 location.setText(bean.getLocation());
                 //Update
-                pointsAwarded.setText("  " + bean.getPointsToAward());
+                pointsAwarded.setText("  " + bean.rewardPtAward);
                 dept.setText("  " + bean.getDepartment());
                 position.setText("  " + bean.getPosition());
                 storyText.setText(bean.getStory());
@@ -131,7 +131,7 @@ public class RewardActivity extends AppCompatActivity {
     public void saveChangesDialog() {
         Log.d(TAG, "saveChangesDialog: ");
 
-        if (!rewardPintsToEdit.getText().toString().isEmpty() && !commentsEdit.getText().toString().isEmpty()) {
+        if (!rewardPintsToEdit.getText().toString().isEmpty() &&!commentsEdit.getText().toString().isEmpty()) {
             saveAlertOnCreateActivity();
         } else {
             warningDialog("Warning dialog on Incomplete data fields");
@@ -150,8 +150,9 @@ public class RewardActivity extends AppCompatActivity {
 
     public void saveAlertOnCreateActivity() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Save Changes?");
+        builder.setTitle("Add Rewards Points?");
         builder.setIcon(R.drawable.logo);
+        builder.setMessage("Add rewards for "+bean.getFirstName()+ " "+bean.getLastName()+"?");
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 Log.d(TAG, "onClick: OK button Clicked");
@@ -183,7 +184,8 @@ public class RewardActivity extends AppCompatActivity {
         valueTarget = Integer.parseInt(rewardPintsToEdit.getText().toString());
         SimpleDateFormat format = new SimpleDateFormat("MM/dd/YYYY");
         dateTarget = format.format(new Date());
-        Log.d(TAG, "callAsyncAPI: date" + dateTarget);
+        Log.d(TAG, "callAsyncAPI: value" + valueTarget);
+
         Log.d(TAG, "callAsyncAPI: " + usernameSource + passwordSource + studentIdSource + studentIdTarget + usernameTarget + nameTarget + dateTarget + notesTarget + valueTarget);
         new RewardsAPIAsyncTask(this, new RewardsBean(studentIdSource, usernameSource, passwordSource, studentIdTarget, usernameTarget, nameTarget, dateTarget, notesTarget, valueTarget)).execute();
     }

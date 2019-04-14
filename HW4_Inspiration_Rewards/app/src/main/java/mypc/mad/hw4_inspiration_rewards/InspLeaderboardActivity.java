@@ -16,7 +16,7 @@ public class InspLeaderboardActivity extends AppCompatActivity implements View.O
     private static final String TAG = "InspLeaderboardActivity";
     private static final int INSP_REQUEST_CODE = 1;
     private RecyclerView recyclerView; // Layout's recyclerview
-    private final List<CreateProfileBean> inspLeaderArrayList = new ArrayList<>();
+    private final List<InspLeaderBoardBean> inspLeaderArrayList = new ArrayList<>();
     CreateProfileBean bean = null;
     private InspLeadAdapter inspLeadAdapter;
 
@@ -25,8 +25,7 @@ public class InspLeaderboardActivity extends AppCompatActivity implements View.O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_insp_leaderboard);
         //Setting ActionBar icon and title
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setIcon(R.drawable.arrow_with_logo);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.arrow_with_logo);
         setTitle("  Inspiration Leaderboard");
 
         //RecyclerView
@@ -61,7 +60,7 @@ public class InspLeaderboardActivity extends AppCompatActivity implements View.O
     public void onClick(View v) {
         int pos = recyclerView.getChildLayoutPosition(v);
 
-        CreateProfileBean beanRec=inspLeaderArrayList.get(pos);
+        InspLeaderBoardBean beanRec=inspLeaderArrayList.get(pos);
         Log.d(TAG, "onClick: ");
         Intent intent = new Intent(this, RewardActivity.class);
         Log.d(TAG, "onClick: Login Details "+bean.getStudentId()+ " "+bean.getUsername()+ " "+bean.getPassword()+ " ");
@@ -78,8 +77,15 @@ public class InspLeaderboardActivity extends AppCompatActivity implements View.O
         return false;
     }
 
-    public void getAllProfilesAPIResp(List<CreateProfileBean> respBeanList) {
-        Log.d(TAG, "getAllProfilesAPIResp: " + respBeanList.get(0).getUsername());
+    public void getAllProfilesAPIResp(List<InspLeaderBoardBean> respBeanList,String connectionResult) {
+        Log.d(TAG, "getAllProfilesAPIResp: " + connectionResult);
+        if(respBeanList!=null)
+        {
+            for(int i=0;i<respBeanList.size();i++)
+            {
+                Log.d(TAG, "getAllProfilesAPIResp: Usernames: "+respBeanList.get(i).getUsername());
+            }
+        }
         Collections.sort(respBeanList);
         inspLeaderArrayList.addAll(respBeanList);
         inspLeadAdapter.notifyDataSetChanged();
