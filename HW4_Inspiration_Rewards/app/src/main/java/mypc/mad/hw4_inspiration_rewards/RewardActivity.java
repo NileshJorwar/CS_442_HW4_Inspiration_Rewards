@@ -27,7 +27,7 @@ import java.util.Date;
 public class RewardActivity extends AppCompatActivity {
     private static final String TAG = "RewardActivity";
 
-    private TextView location;
+
     private TextView pointsAwarded;
     private TextView dept;
     private TextView position;
@@ -60,7 +60,6 @@ public class RewardActivity extends AppCompatActivity {
         getSupportActionBar().setIcon(R.drawable.icon);
 
         name = findViewById(R.id.awardProfileName);
-        location = findViewById(R.id.awardProfileLocation);
         pointsAwarded = findViewById(R.id.awardProfilePtAwarded);
         dept = findViewById(R.id.awardProfileDept);
         position = findViewById(R.id.awardProfilePos);
@@ -94,7 +93,6 @@ public class RewardActivity extends AppCompatActivity {
             try {
                 setTitle(" " + bean.getFirstName() + " " + bean.getLastName());
                 name.setText(bean.getLastName() + ", " + bean.getFirstName());
-                location.setText(bean.getLocation());
                 //Update
                 pointsAwarded.setText("  " + bean.rewardPtAward);
                 dept.setText("  " + bean.getDepartment());
@@ -123,6 +121,7 @@ public class RewardActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.saveMenu:
                 saveChangesDialog();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -180,7 +179,7 @@ public class RewardActivity extends AppCompatActivity {
 
         usernameTarget = bean.getUsername();
         studentIdTarget = bean.getStudentId();
-        notesTarget = commentsEdit.getText().toString();
+        notesTarget = commentsEdit.getText().toString().trim();
         valueTarget = Integer.parseInt(rewardPintsToEdit.getText().toString());
         SimpleDateFormat format = new SimpleDateFormat("MM/dd/YYYY");
         dateTarget = format.format(new Date());
@@ -198,7 +197,8 @@ public class RewardActivity extends AppCompatActivity {
             intent.putExtra("STIDLOGIN", studentIdSource);
             intent.putExtra("PSSLOGIN", passwordSource);
             intent.putExtra("USERLOGIN", usernameSource);
-            startActivity(intent);
+            setResult(RESULT_OK,intent);
+            finish();
         } else {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Error!");

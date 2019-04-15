@@ -11,13 +11,13 @@
     <ImageView
         android:id="@+id/imgLogo"
         android:layout_width="89dp"
-        android:layout_height="76dp"
+        android:layout_height="91dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="80dp"
         android:scaleType="fitCenter"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/icon" />
+        app:srcCompat="@drawable/logo" />
 
     <ImageView
         android:id="@+id/imgTitle"
@@ -54,6 +54,7 @@
         android:layout_marginTop="230dp"
         android:autofillHints=""
         android:background="#D6D7D7"
+        android:paddingLeft="4dp"
         android:ems="10"
         android:hint="@string/username_hint"
         android:inputType="textPersonName"
@@ -71,6 +72,7 @@
         android:ems="10"
         android:hint="@string/password_hint"
         android:inputType="textPassword"
+        android:paddingLeft="4dp"
         android:textColorHint="#FF178E7E"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="@+id/usernameView"
@@ -82,7 +84,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:background="@android:color/darker_gray"
+        android:background="#D6D7D7"
         android:onClick="onLoginBtnClick"
         android:text="@string/loginbutton"
         android:textColor="#FF178E7E"
@@ -109,15 +111,31 @@
         android:id="@+id/createNewAccView"
         android:layout_width="0dp"
         android:layout_height="37dp"
-        android:layout_marginTop="50dp"
-        android:layout_marginBottom="250dp"
+        android:layout_marginTop="24dp"
         android:onClick="onNewAccCreateClick"
         android:text="@string/newaccountcreateview"
         android:textColor="#FF178E7E"
         android:textSize="18sp"
         android:textStyle="bold|italic"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/remCredChk"
         app:layout_constraintStart_toStartOf="@+id/remCredChk"
         app:layout_constraintTop_toBottomOf="@+id/remCredChk" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="110dp"
+        android:layout_height="110dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:indeterminate="true"
+        android:translationZ="2dp"
+        android:visibility="gone"
+        android:indeterminateTint="#FF178E7E"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </android.support.constraint.ConstraintLayout>

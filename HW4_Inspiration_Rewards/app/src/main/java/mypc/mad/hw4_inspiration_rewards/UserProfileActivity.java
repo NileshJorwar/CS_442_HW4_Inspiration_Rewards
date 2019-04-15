@@ -36,6 +36,9 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
     private TextView rewardsCommentsCount;
     private String imgString = "";
 
+    private static final int PROFILE_EDIT_REQUEST_CODE = 1;
+    private static final int PROFILE_DASH_REQUEST_CODE = 2;
+
     private RecyclerView recyclerView; // Layout's recyclerview
     private UserProfileRewardHistoryAdapter userProfileRewardHistoryAdapter;
     private List<RewardRecords> rewardArrayList = new ArrayList<>();
@@ -62,10 +65,11 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
         dept = findViewById(R.id.userProfileDept);
         position = findViewById(R.id.userProfilePos);
         pointsAvailable = findViewById(R.id.userProfilePtAvail);
-        pointsAwarded=findViewById(R.id.userProfilePtAwarded);
+        pointsAwarded = findViewById(R.id.userProfilePtAwarded);
         storyText = findViewById(R.id.userProfileStoryText);
+        storyText.getBackground().setAlpha(80);
         userPhoto = findViewById(R.id.userProfileImage);
-        rewardsCommentsCount= findViewById(R.id.userProfileCommentsCnt);
+        rewardsCommentsCount = findViewById(R.id.userProfileCommentsCnt);
         Intent intent = getIntent();
         if (intent.hasExtra("USERPROFILE")) {
             Log.d(TAG, "onCreate: ");
@@ -80,6 +84,7 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
                 dept.setText("  " + bean.getDepartment());
                 position.setText("  " + bean.getPosition());
                 storyText.setText(bean.getStory());
+
                 //Image Transformation
                 imgString = bean.getImageBytes();
                 byte[] imageBytes = Base64.decode(imgString, Base64.DEFAULT);
@@ -91,26 +96,22 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
             }
         }
 
-        Intent arrListIntent=getIntent();
+        Intent arrListIntent = getIntent();
         if (intent.hasExtra("USERPROFILE_LIST")) {
-            List<RewardRecords> list=new ArrayList<>();
+            List<RewardRecords> list = new ArrayList<>();
             rewardArrayList.clear();
-            list=(List<RewardRecords>) intent.getSerializableExtra("USERPROFILE_LIST");
-            if(list!=null)
-            {
-                int totalRewards=0;
-                for(int i=0;i<list.size();i++)
-                {
-                    RewardRecords rewardRec=list.get(i);
-                    totalRewards+=rewardRec.getValue();
+            list = (List<RewardRecords>) intent.getSerializableExtra("USERPROFILE_LIST");
+            if (list != null) {
+                int totalRewards = 0;
+                for (int i = 0; i < list.size(); i++) {
+                    RewardRecords rewardRec = list.get(i);
+                    totalRewards += rewardRec.getValue();
                 }
                 pointsAwarded.setText("  " + totalRewards);
-                rewardsCommentsCount.setText("("+list.size()+")");
-            }
-            else
-            {
+                rewardsCommentsCount.setText("(" + list.size() + "):");
+            } else {
                 pointsAwarded.setText("0");
-                rewardsCommentsCount.setText("("+list.size()+")");
+                rewardsCommentsCount.setText("(" + list.size() + "):");
             }
 
             rewardArrayList.addAll(list);
@@ -138,16 +139,93 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
                 Intent editIntent = new Intent(this, EditActivity.class);
                 editIntent.putExtra("EDITPROFILE", bean);
                 editIntent.putExtra("EDITPROFILE_LIST", (Serializable) rewardArrayList);
-                startActivity(editIntent);
+                startActivityForResult(editIntent, PROFILE_EDIT_REQUEST_CODE);
                 return true;
             case R.id.dashboardMenu:
-                Log.d(TAG, "onOptionsItemSelected: DashboardClick" );
+                Log.d(TAG, "onOptionsItemSelected: DashboardClick");
                 Intent dashboardIntent = new Intent(this, InspLeaderboardActivity.class);
                 dashboardIntent.putExtra("INSPLEADPROFILE", bean);
-                startActivity(dashboardIntent);
+                startActivityForResult(dashboardIntent, PROFILE_DASH_REQUEST_CODE);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d(TAG, "onActivityResult: Profile: " + requestCode + " " + resultCode);
+        if (requestCode == PROFILE_EDIT_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                getIntentFromEditToProfile(data);
+            } else {
+                Log.d(TAG, "onActivityResult: result Code: " + resultCode);
+            }
+        } else if (requestCode == PROFILE_DASH_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                getIntentFromInspToProfile(data);
+            } else {
+                Log.d(TAG, "onActivityResult: result Code: " + resultCode);
+            }
+        } else {
+            Log.d(TAG, "onActivityResult: Request Code " + requestCode);
+        }
+    }
+
+    public void getIntentFromInspToProfile(Intent data) {
+        if (data.hasExtra("POINTSTOAWARD")) {
+            Log.d(TAG, "getIntentFromInspToProfile: "+data.getStringExtra("POINTSTOAWARD"));
+            int points=0;
+            points=Integer.parseInt(data.getStringExtra("POINTSTOAWARD"));
+            pointsAvailable.setText("  " + data.getStringExtra("POINTSTOAWARD"));
+            bean.setPointsToAward(points);
+        }
+    }
+
+    public void getIntentFromEditToProfile(Intent data) {
+        if (data.hasExtra("USERPROFILE")) {
+            Log.d(TAG, "getIntentFromEditToProfile: ");
+            bean = (CreateProfileBean) data.getSerializableExtra("USERPROFILE");
+            Log.d(TAG, "getUserProfileAct: " + bean.getUsername() + bean.getFirstName() + bean.getLastName() + bean.getLocation() + bean.getDepartment() + bean.getPassword() + bean.getPosition() + bean.getStory() + bean.getPointsToAward());
+            try {
+                name.setText(bean.getLastName() + ", " + bean.getFirstName());
+                uname.setText("(" + bean.getUsername() + ")");
+                location.setText(bean.getLocation());
+                //Update
+                pointsAvailable.setText("  " + bean.getPointsToAward());
+                dept.setText("  " + bean.getDepartment());
+                position.setText("  " + bean.getPosition());
+                storyText.setText(bean.getStory());
+                //Image Transformation
+                imgString = bean.getImageBytes();
+                byte[] imageBytes = Base64.decode(imgString, Base64.DEFAULT);
+                Bitmap bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
+                userPhoto.setImageBitmap(bitmap);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        if (data.hasExtra("USERPROFILE_LIST")) {
+            List<RewardRecords> list = new ArrayList<>();
+            rewardArrayList.clear();
+            list = (List<RewardRecords>) data.getSerializableExtra("USERPROFILE_LIST");
+            if (list != null) {
+                int totalRewards = 0;
+                for (int i = 0; i < list.size(); i++) {
+                    RewardRecords rewardRec = list.get(i);
+                    totalRewards += rewardRec.getValue();
+                }
+                pointsAwarded.setText("  " + totalRewards);
+                rewardsCommentsCount.setText("(" + list.size() + "):");
+            } else {
+                pointsAwarded.setText("0");
+                rewardsCommentsCount.setText("(" + list.size() + "):");
+            }
+
+            rewardArrayList.addAll(list);
+            userProfileRewardHistoryAdapter.notifyDataSetChanged();
         }
     }
 

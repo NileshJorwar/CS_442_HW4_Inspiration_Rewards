@@ -71,7 +71,7 @@ public class EditActivity extends AppCompatActivity {
     private String password = "";
     private String firstName = "";
     private String lastName = "";
-    private int pointsToAward = 1000;
+    private int pointsToAward ;
     private String department = "";
     private String story = "";
     private String position = "";
@@ -94,6 +94,7 @@ public class EditActivity extends AppCompatActivity {
     private double latitude;
     private double longitude;
     private List<RewardRecords> rewardArrayList = new ArrayList<>();
+    Intent dataFromEditToProfile;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -274,6 +275,11 @@ public class EditActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.saveMenu:
                 saveChangesDialog();
+                return true;
+            case android.R.id.home:
+                Log.d(TAG, "onOptionsItemSelected: Up Navigation");
+                finish();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -468,10 +474,10 @@ public class EditActivity extends AppCompatActivity {
         firstName = firstEdit.getText().toString();
         lastName = lastEdit.getText().toString();
         department = deptEdit.getText().toString();
-        story = storyEdit.getText().toString();
+        story = storyEdit.getText().toString().trim();
         position = posEdit.getText().toString();
         Log.d(TAG, "callAsyncAPI: " + imgString);
-        respBean = new CreateProfileBean(studentId, username, password, firstName, lastName, pointsToAward, department, story, position, admin, locationFromLatLong, imgString);
+        respBean = new CreateProfileBean(studentId, username, password, firstName, lastName, bean.getPointsToAward(), department, story, position, admin, locationFromLatLong, imgString);
         new UpdateProfileAPIAsyncTask(this, respBean,rewardArrayList).execute();
     }
 
@@ -482,7 +488,8 @@ public class EditActivity extends AppCompatActivity {
             Intent intent = new Intent(this, UserProfileActivity.class);
             intent.putExtra("USERPROFILE_LIST", (Serializable) rewardArrayList);
             intent.putExtra("USERPROFILE", respBean);
-            startActivity(intent);
+            setResult(RESULT_OK,intent);
+            finish();
             makeCustomToast(EditActivity.this, "User Update Successful", Toast.LENGTH_SHORT);
         }
         else
@@ -495,6 +502,12 @@ public class EditActivity extends AppCompatActivity {
             dialog.show();
         }
 
+    }
+    @Override
+    public void onBackPressed()
+    {
+        finish();
+        makeCustomToast(EditActivity.this, "Data not saved/edited", Toast.LENGTH_SHORT);
     }
 
 }

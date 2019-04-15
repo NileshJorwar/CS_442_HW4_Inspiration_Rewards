@@ -80,7 +80,7 @@ public class CreateActivity extends AppCompatActivity {
     private String password = "";
     private String firstName = "";
     private String lastName = "";
-    private int pointsToAward = 1000;
+    private int pointsToAward =1000;
     private String department = "";
     private String story = "";
     private String position = "";
@@ -300,11 +300,21 @@ public class CreateActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.saveMenu:
                 saveChangesDialog();
+                return true;
+            case android.R.id.home:
+                makeCustomToast(this, "New Profile Not Created", Toast.LENGTH_SHORT);
+                finish();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
-
+    @Override
+    public void onBackPressed()
+    {
+        finish();
+        makeCustomToast(this, "New Profile Not Created", Toast.LENGTH_SHORT);
+    }
     private void ifNewImageIsNotSelected() {
         Bitmap bm = ((BitmapDrawable) addUser.getDrawable()).getBitmap();
         ByteArrayOutputStream bitmapAsByteArrayStream = new ByteArrayOutputStream();
@@ -367,7 +377,7 @@ public class CreateActivity extends AppCompatActivity {
         firstName = firstEdit.getText().toString();
         lastName = lastEdit.getText().toString();
         department = deptEdit.getText().toString();
-        story = storyEdit.getText().toString();
+        story = storyEdit.getText().toString().trim();
         position = posEdit.getText().toString();
         new CreateProfileAPIAsyncTask(this, new CreateProfileBean(studentId, username, password, firstName, lastName, pointsToAward, department, story, position, admin, locationFromLatLong, imgString)).execute();
     }
@@ -441,9 +451,7 @@ public class CreateActivity extends AppCompatActivity {
     }
 
     public void getCreateProfileAPIResp(CreateProfileBean respBean,String connectionResult) {
-        Log.d(TAG, "getCreateProfileAPIResp: " + respBean.getUsername() + respBean.getFirstName()
-                + respBean.getLastName() + respBean.getLocation() + respBean.getDepartment() + respBean.getPassword()
-                + respBean.getPosition() + respBean.getStory() + respBean.getPointsToAward());
+
         if(respBean==null)
         {
             makeCustomToast(this, connectionResult, Toast.LENGTH_SHORT);
@@ -455,6 +463,7 @@ public class CreateActivity extends AppCompatActivity {
             intent.putExtra("USERPROFILE", respBean);
             startActivity(intent);
             makeCustomToast(this, "User Create Successful", Toast.LENGTH_SHORT);
+            finish();
         }
 
     }

@@ -19,6 +19,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText passView;
     private TextView newAccView;
     private CheckBox credChkBox;
+    private ProgressBar progressBar;
     private LocationManager locationManager;
     private Location currentLocation;
     private Criteria criteria;
@@ -71,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
         unameView = (EditText) findViewById(R.id.usernameView);
         passView = (EditText) findViewById(R.id.passowrdView);
         credChkBox = (CheckBox) findViewById(R.id.remCredChk);
-
+        progressBar=findViewById(R.id.progressBar);
         //Storing the Login Credentials to SharedPreferences
         preferences = new RewardsPreferences(this);
 
@@ -140,7 +142,9 @@ public class MainActivity extends AppCompatActivity {
         if (uName.equals("") || pswd.equals("")) {
             errorDialog("errorDialog: incomplete input fields!!", "Incomplete Input Fields", "Please Enter Valid UserName/Password");
         } else {
+            progressBar.setVisibility(View.VISIBLE);
             new LoginAPIAsyncTask(mainActivity).execute(sId, uName, pswd);
+
         }
     }
 
@@ -168,13 +172,17 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "getLoginAPIResp: " + respBean);
         if (respBean == null) {
             makeCustomToast(this, connectionResult, Toast.LENGTH_SHORT);
+            progressBar.setVisibility(View.GONE);
             return;
         } else {
             Log.d(TAG, "getLoginAPIResp: " + respBean.getUsername() + respBean.getFirstName() + respBean.getLastName() + respBean.getLocation() + respBean.getDepartment() + respBean.getPassword() + respBean.getPosition() + respBean.getStory() + respBean.getPointsToAward());
+
             Intent intent = new Intent(this, UserProfileActivity.class);
             intent.putExtra("USERPROFILE", respBean);
             intent.putExtra("USERPROFILE_LIST", (Serializable) rewardsList);
+            progressBar.setVisibility(View.GONE);
             startActivity(intent);
+
         }
     }
 }

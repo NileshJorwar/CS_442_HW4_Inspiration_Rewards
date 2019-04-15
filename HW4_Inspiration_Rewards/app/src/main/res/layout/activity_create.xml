@@ -21,8 +21,9 @@
 
     <EditText
         android:id="@+id/createUname"
-        android:layout_width="224dp"
+        android:layout_width="0dp"
         android:layout_height="36dp"
+        android:layout_marginStart="19dp"
         android:layout_marginTop="12dp"
         android:layout_marginEnd="8dp"
         android:background="#D7D7D6"
@@ -31,6 +32,7 @@
         android:inputType="textPersonName"
         android:textColorHint="#FF178E7E"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/createUserPhoto"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
@@ -38,11 +40,11 @@
         android:layout_width="0dp"
         android:layout_height="38dp"
         android:layout_marginTop="12dp"
+        android:background="#D7D7D6"
         android:ems="10"
-        android:textColorHint="#FF178E7E"
         android:hint="@string/createPwd_hint"
         android:inputType="textPassword"
-        android:background="#D7D7D6"
+        android:textColorHint="#FF178E7E"
         app:layout_constraintEnd_toEndOf="@+id/createUname"
         app:layout_constraintStart_toStartOf="@+id/createUname"
         app:layout_constraintTop_toBottomOf="@+id/createUname" />
@@ -179,4 +181,14 @@
         app:layout_constraintEnd_toEndOf="@+id/createPos"
         app:layout_constraintStart_toStartOf="@+id/createPos"
         app:layout_constraintTop_toBottomOf="@+id/createPos" />
+
+    <ImageView
+        android:id="@+id/createImageAdd"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="@+id/createUserPhoto"
+        app:layout_constraintEnd_toEndOf="@+id/createUserPhoto"
+        app:layout_constraintStart_toStartOf="@+id/createUserPhoto"
+        app:layout_constraintTop_toTopOf="@+id/createUserPhoto"
+        app:srcCompat="@android:drawable/ic_menu_add" />
 </android.support.constraint.ConstraintLayout>
