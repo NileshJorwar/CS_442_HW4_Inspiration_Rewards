@@ -153,6 +153,7 @@ public class CreateProfileAPIAsyncTask extends AsyncTask<Void, Void, String> {
             try {
                 JSONObject jsonObject = new JSONObject(connectionResult);
                 String username = jsonObject.getString("username");
+                String studentId = jsonObject.getString("studentId");
                 String password = jsonObject.getString("password");
                 String firstName = jsonObject.getString("firstName");
                 String lastName = jsonObject.getString("lastName");
@@ -163,7 +164,7 @@ public class CreateProfileAPIAsyncTask extends AsyncTask<Void, Void, String> {
                 boolean admin = jsonObject.getBoolean("admin");
                 String location = jsonObject.getString("location");
                 String imageBytes = jsonObject.getString("imageBytes");
-                bean = new CreateProfileBean("A20405042", username, password, firstName, lastName, pointsToAward, department, story, position, admin, location, imageBytes);
+                bean = new CreateProfileBean(studentId, username, password, firstName, lastName, pointsToAward, department, story, position, admin, location, imageBytes);
                 createActivity.getCreateProfileAPIResp(bean, "Profile Created Successfully.");
             } catch (JSONException e) {
                 e.printStackTrace();

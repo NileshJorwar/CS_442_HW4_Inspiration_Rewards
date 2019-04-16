@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.location.Address;
 import android.location.Criteria;
@@ -292,9 +293,9 @@ public class EditActivity extends AppCompatActivity {
             locationFromLatLong = "Chicago, Illinois";
         if (imgString == "")
             ifNewImageIsNotSelected();
-        if (!userNameEdit.getText().toString().isEmpty() && !passwordEdit.getText().toString().isEmpty() && !firstEdit.getText().toString().isEmpty()
-                && !lastEdit.getText().toString().isEmpty() && !deptEdit.getText().toString().isEmpty() && !posEdit.getText().toString().isEmpty()
-                && !storyEdit.getText().toString().isEmpty() && locationFromLatLong != "" && imgString != "") {
+        if (!userNameEdit.getText().toString().trim().isEmpty() && !passwordEdit.getText().toString().trim().isEmpty() && !firstEdit.getText().toString().trim().isEmpty()
+                && !lastEdit.getText().toString().trim().isEmpty() && !deptEdit.getText().toString().trim().isEmpty() && !posEdit.getText().toString().trim().isEmpty()
+                && !storyEdit.getText().toString().trim().isEmpty() && locationFromLatLong != "" && imgString != "") {
             saveAlertOnCreateActivity();
         } else {
             warningDialog("Warning dialog on Incomplete data fields");
@@ -426,9 +427,13 @@ public class EditActivity extends AppCompatActivity {
     private void processCamera() {
         Uri selectedImage = Uri.fromFile(currentImageFile);
         userPhoto.setImageURI(selectedImage);
+        Matrix matrix=new Matrix();
+        matrix.postRotate(90);
         Bitmap bm = ((BitmapDrawable) userPhoto.getDrawable()).getBitmap();
+        Bitmap newBitmap=Bitmap.createBitmap(bm,0,0,bm.getWidth(),bm.getHeight(),matrix,true);
+        userPhoto.setImageBitmap(newBitmap);
         ByteArrayOutputStream bitmapAsByteArrayStream = new ByteArrayOutputStream();
-        bm.compress(Bitmap.CompressFormat.JPEG, 50, bitmapAsByteArrayStream);
+        newBitmap.compress(Bitmap.CompressFormat.JPEG, 50, bitmapAsByteArrayStream);
         imgString = Base64.encodeToString(bitmapAsByteArrayStream.toByteArray(), Base64.DEFAULT);
         Log.d(TAG, "processCamera: baseEncoder" + imgString);
         makeCustomToast(this, "Photo Size: " + String.format(Locale.getDefault(), "%,d", bm.getByteCount()), Toast.LENGTH_LONG);
@@ -448,6 +453,10 @@ public class EditActivity extends AppCompatActivity {
         }
 
         final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+
+
+
+
         userPhoto.setImageBitmap(selectedImage);
         makeCustomToast(this, String.format(Locale.getDefault(), "%,d", selectedImage.getByteCount()), Toast.LENGTH_LONG);
         Bitmap bm = ((BitmapDrawable) userPhoto.getDrawable()).getBitmap();
